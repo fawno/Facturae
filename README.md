@@ -1,3 +1,7 @@
+[![GitHub license](https://img.shields.io/github/license/fawno/Facturae.svg)](https://github.com/fawno/Facturae/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/fawno/Facturae.svg)](https://github.com/fawno/Facturae/releases)
+[![Packagist](https://img.shields.io/packagist/v/fawno/Facturae.svg)](https://packagist.org/packages/fawno/facturae)
+
 # Facturae
 Clases para la gestión de facturas electrónicas [Facturae](http://www.facturae.gob.es)
 
