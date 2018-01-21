@@ -68,6 +68,35 @@
       return false;
     }
 
+     public function nif_validation ($nif) {
+      if (preg_match('~(ES)?([\w\d]{9})~', strtoupper($nif), $parts)) {
+        $nif = end($parts);
+        if (preg_match('~(^[XYZ\d]\d{7})([TRWAGMYFPDXBNJZSQVHLCKE]$)~', $nif, $parts)) {
+          $control = 'TRWAGMYFPDXBNJZSQVHLCKE';
+          $nie = ['X', 'Y', 'Z'];
+          $parts[1] = str_replace(array_values($nie), array_keys($nie), $parts[1]);
+          $cheksum = substr($control, $parts[1] % 23, 1);
+          return ($parts[2] == $cheksum);
+        } elseif (preg_match('~(^[ABCDEFGHIJKLMUV])(\d{7})(\d$)~', $nif, $parts)) {
+          $checksum = 0;
+          foreach (str_split($parts[2]) as $pos => $val) {
+            $checksum += array_sum(str_split($val * (2 - ($pos % 2))));
+          }
+          $checksum = ((10 - ($checksum % 10)) % 10);
+          return ($parts[3] == $checksum);
+        } elseif (preg_match('~(^[KLMNPQRSW])(\d{7})([JABCDEFGHI]$)~', $nif, $parts)) {
+          $control = 'JABCDEFGHI';
+          $checksum = 0;
+          foreach (str_split($parts[2]) as $pos => $val) {
+            $checksum += array_sum(str_split($val * (2 - ($pos % 2))));
+          }
+          $checksum = substr($control, ((10 - ($checksum % 10)) % 10), 1);
+          return ($parts[3] == $checksum);
+        }
+      }
+      return false;
+    }
+
     public function signRequest ($request) {
       $doc = new DOMDocument('1.0');
       $doc->loadXML($request);
