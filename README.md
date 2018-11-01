@@ -32,7 +32,7 @@ Carga la clase en tu script:
 <?php
   require 'vendor/autoload.php';
 
-  use Fawno\AEAT\wsdlFACe;
+  use Fawno\Facturae\wsdlFACe;
 ```
 
 ### Instalación manual
