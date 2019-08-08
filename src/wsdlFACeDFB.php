@@ -11,7 +11,7 @@
 
   namespace Fawno\Facturae;
 
-  use wsdlFACe;
+  use Fawno\Facturae\wsdlFACe;
 
   class wsdlFACeDFB extends wsdlFACe {
     protected $devel = 'http://80.245.0.101/CGS2/FacturaSSPPWebServiceProxyPort?WSDL';
