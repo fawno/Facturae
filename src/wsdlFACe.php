@@ -102,11 +102,11 @@
       $doc->loadXML($request);
 
       $objWSSE = new WSSESoap($doc);
+      $token = $objWSSE->addBinaryToken($this->public_key);
       $objWSSE->addTimestamp();
       $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
       $objKey->loadKey($this->private_key);
-      $objWSSE->signSoapDoc($objKey);
-      $token = $objWSSE->addBinaryToken($this->public_key);
+      $objWSSE->signSoapDoc($objKey, ['insertBefore' => false]);
       $objWSSE->attachTokentoSig($token);
 
       return $objWSSE->saveXML();
