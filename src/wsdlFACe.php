@@ -128,9 +128,13 @@
     }
 
     protected function FacturaFile ($filename, $mimetype = null) {
-      if (empty($mimetype) and function_exists('mime_content_type')) $mimetype = mime_content_type($filename);
+			if (empty($mimetype) and function_exists('mime_content_type')) {
+				$mimetype = mime_content_type($filename);
+			}
 
       $FacturaFile['factura'] = base64_encode(file_get_contents($filename));
+			// Remove BOM in BASE64 encoding
+			$FacturaFile['factura'] = preg_replace('~^77u/~', '', $FacturaFile['factura']);
       $FacturaFile['nombre'] = basename($filename);
       $FacturaFile['mime'] = $mimetype;
 
