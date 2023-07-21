@@ -85,7 +85,8 @@ Ejemplo de envío de una factura:
   $correo = 'example@example.com';
 
   try {
-    $response = $wsdlFACe->enviarFactura($correo, $xmlfile);
+    $invoiceWS = $wsdlFACe->SSPPFactura($email, $invoice_file, $attachments);
+    $response = $wsdlFACe->enviarFactura($invoiceWS);
     print_r($response);
   } catch (SoapFault $fault) {
     print_r($fault);

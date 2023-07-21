@@ -1,6 +1,5 @@
 {
   "name": "fawno/facturae",
-  "version": "1.0.5",
   "description": "Clases para la gestión de facturas electrónicas",
   "license": "MIT",
   "authors": [
@@ -17,8 +16,8 @@
     "php": ">=5.6.0",
     "ext-openssl": "*",
     "ext-soap": "*",
-    "robrichards/xmlseclibs": ">=2.0",
-    "robrichards/wse-php": ">=2.0"
+    "robrichards/xmlseclibs": "@stable",
+    "robrichards/wse-php": "@stable"
   },
   "autoload": {
     "psr-4": {
