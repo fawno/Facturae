@@ -31,7 +31,9 @@
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
       }
 
-      $this->set_pkcs12($pkcs12_file, $pkcs12_pass);
+      if ($pkcs12_file and is_file($pkcs12_file) and $pkcs12_pass) {
+        $this->set_pkcs12($pkcs12_file, $pkcs12_pass);
+      }
 
       return parent::__construct($this->wsdl, $options);
     }
@@ -47,7 +49,7 @@
       return stream_context_create($options);
     }
 
-    public function __doRequest (string $request, string $location, string $action, int $version, bool $oneWay = false) : ?string {
+    public function __doRequest ($request, $location, $action, $version, $oneWay = false) {
       $request_signed = $this->signRequest($request);
 
       return parent::__doRequest($request_signed, $location, $action, $version, $oneWay);
