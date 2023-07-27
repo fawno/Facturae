@@ -115,7 +115,7 @@
     }
 
     public function ArrayOfSSPPFicheroAnexo (array $anexos) : SoapVar {
-      return new SoapVar(array_map('wsdlFACe::SSPPFicheroAnexo', $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
+      return new SoapVar(array_map([$this, 'SSPPFicheroAnexo'], $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
     }
 
     public function SSPPFicheroAnexo (string $filename, ?string $mimetype = null) : SoapVar {
