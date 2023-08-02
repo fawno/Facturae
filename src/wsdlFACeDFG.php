@@ -12,6 +12,8 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\wsdlFACe;
+
   class wsdlFACeDFG extends wsdlFACe {
     protected $devel = 'https://w390w.gipuzkoa.net/WAS/HACI/HFAServiciosProveedoresWEB/services/FacturaSSPPWebServiceProxyPort?wsdl';
     protected $wsdl = 'https://w390w.gipuzkoa.net/WAS/HACI/HFAServiciosProveedoresWEB/services/FacturaSSPPWebServiceProxyPort?wsdl';

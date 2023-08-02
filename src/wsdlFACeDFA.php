@@ -12,6 +12,8 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\wsdlFACe;
+
   class wsdlFACeDFA extends wsdlFACe {
     protected $devel = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
     protected $wsdl = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';

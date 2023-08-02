@@ -81,17 +81,17 @@
       return $objWSSE->saveXML();
     }
 
-    public function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
+    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
       $SSPPFactura = [
         'correo' => $correo,
-        'factura' => $this->SSPPFicheroFactura($fichero_factura),
-        'anexos' => $this->ArrayOfSSPPFicheroAnexo($anexos),
+        'factura' => self::SSPPFicheroFactura($fichero_factura),
+        'anexos' => self::ArrayOfSSPPFicheroAnexo($anexos),
       ];
 
       return new SoapVar((object) $SSPPFactura, SOAP_ENC_OBJECT, 'EnviarFacturaRequest', 'https://webservice.face.gob.es');
     }
 
-    public function SSPPFicheroFactura (string $filename, ?string $mimetype = null) : SoapVar {
+    public static function SSPPFicheroFactura (string $filename, ?string $mimetype = null) : SoapVar {
       if (empty($mimetype) and function_exists('mime_content_type')) {
         $mimetype = mime_content_type($filename);
 
@@ -114,11 +114,11 @@
       return new SoapVar((object) $SSPPFicheroFactura, SOAP_ENC_OBJECT, 'FacturaFile', 'https://webservice.face.gob.es');
     }
 
-    public function ArrayOfSSPPFicheroAnexo (array $anexos) : SoapVar {
-      return new SoapVar(array_map([$this, 'SSPPFicheroAnexo'], $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
+    public static function ArrayOfSSPPFicheroAnexo (array $anexos) : SoapVar {
+      return new SoapVar(array_map('self::SSPPFicheroAnexo', $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
     }
 
-    public function SSPPFicheroAnexo (string $filename, ?string $mimetype = null) : SoapVar {
+    public static function SSPPFicheroAnexo (string $filename, ?string $mimetype = null) : SoapVar {
       if (empty($mimetype) and function_exists('mime_content_type')) {
         $mimetype = mime_content_type($filename);
       }

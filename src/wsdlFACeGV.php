@@ -12,6 +12,8 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\wsdlFACe;
+
   class wsdlFACeGV extends wsdlFACe {
     protected $devel = 'https://svc.integracion.test.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
     protected $wsdl = 'https://svc.integracion.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
