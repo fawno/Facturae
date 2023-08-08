@@ -26,6 +26,7 @@
 
     public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['location'] = $options['location'] ?? ($devel ? $this->devel : $this->wsdl);
+			$this->wsdl = $options['location'];
 
       if (empty($options['stream_context'])) {
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
