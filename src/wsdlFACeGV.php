@@ -15,13 +15,11 @@
   use Fawno\Facturae\wsdlFACe;
 
   class wsdlFACeGV extends wsdlFACe {
-    protected $devel = 'https://svc.integracion.test.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
-    protected $wsdl = 'https://svc.integracion.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
-    protected $private_key = null;
-    protected $public_key = null;
+    public const WSDL_DEV  = 'https://svc.integracion.test.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
+    public const WSDL      = 'https://svc.integracion.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
 
     public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
-      $options['location'] = $options['location'] ?? ($devel ? $this->devel : $this->wsdl);
+      $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
 
       return parent::__construct($pkcs12_file, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
     }

@@ -19,13 +19,15 @@
   use RobRichards\XMLSecLibs\XMLSecurityKey;
 
   class wsdlFACe extends SoapClient {
-    protected $devel = 'https://se-face-webservice.redsara.es/facturasspp?wsdl';
-    protected $wsdl = 'https://webservice.face.gob.es/facturasspp?wsdl';
+    public const WSDL_DEV = 'https://se-face-webservice.redsara.es/facturasspp?wsdl';
+    public const WSDL     = 'https://webservice.face.gob.es/facturasspp?wsdl';
+
+    protected $wsdl = self::WSDL;
     protected $private_key = null;
     protected $public_key = null;
 
     public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
-      $options['location'] = $options['location'] ?? ($devel ? $this->devel : $this->wsdl);
+      $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
 			$this->wsdl = $options['location'];
 
       if (empty($options['stream_context'])) {
@@ -50,6 +52,7 @@
       return stream_context_create($options);
     }
 
+    #[\ReturnTypeWillChange]
     public function __doRequest ($request, $location, $action, $version, $oneWay = false) {
       $request_signed = $this->signRequest($request);
 

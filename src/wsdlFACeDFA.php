@@ -15,13 +15,11 @@
   use Fawno\Facturae\wsdlFACe;
 
   class wsdlFACeDFA extends wsdlFACe {
-    protected $devel = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
-    protected $wsdl = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
-    protected $private_key = null;
-    protected $public_key = null;
+    public const WSDL_DEV  = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
+    public const WSDL      = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
 
     public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
-      $options['location'] = $options['location'] ?? ($devel ? $this->devel : $this->wsdl);
+      $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
 
       return parent::__construct($pkcs12_file, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
     }
