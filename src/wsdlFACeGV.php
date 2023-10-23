@@ -12,9 +12,9 @@
 
   namespace Fawno\Facturae;
 
-  use Fawno\Facturae\wsdlFACe;
+  use Fawno\Facturae\FACe2;
 
-  class wsdlFACeGV extends wsdlFACe {
+  class wsdlFACeGV extends FACe2 {
     public const WSDL_DEV  = 'https://svc.integracion.test.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
     public const WSDL      = 'https://svc.integracion.euskadi.net/ctxweb/secured_ssl/w42ajEFacturaSSPP2?WSDL';
 

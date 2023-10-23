@@ -12,9 +12,9 @@
 
   namespace Fawno\Facturae;
 
-  use Fawno\Facturae\wsdlFACe;
+  use Fawno\Facturae\FACe2;
 
-  class wsdlFACeDFB extends wsdlFACe {
+  class wsdlFACeDFB extends FACe2 {
     public const WSDL_DEV  = 'http://80.245.0.101/CGS2/FacturaSSPPWebServiceProxyPort?WSDL';
     public const WSDL      = 'http://apps.bizkaia.net/CGS2/FacturaSSPPWebServiceProxyPort?WSDL';
 

@@ -12,9 +12,9 @@
 
   namespace Fawno\Facturae;
 
-  use Fawno\Facturae\wsdlFACe;
+  use Fawno\Facturae\FACe2;
 
-  class wsdlFACeDFA extends wsdlFACe {
+  class wsdlFACeDFA extends FACe2 {
     public const WSDL_DEV  = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
     public const WSDL      = 'https://www.araba.eus/FacturaeProv/FacturaeProvService?wsdl';
 

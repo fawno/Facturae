@@ -12,19 +12,7 @@
 
   namespace Fawno\Facturae;
 
-  use Fawno\Facturae\wsdlFACe;
-  use SoapVar;
+  use Fawno\Facturae\FACeBiskaytik;
 
-  class wsdlBiscayTIK extends wsdlFACe {
-    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
-      $SSPPFactura = [
-        'facturaWS' => (object) [
-          'correo' => $correo,
-          'fichero_factura' => self::SSPPFicheroFactura($fichero_factura),
-          'ficheros_anexos' => self::ArrayOfSSPPFicheroAnexo($anexos),
-        ]
-      ];
-
-      return new SoapVar((object) $SSPPFactura, SOAP_ENC_OBJECT, 'EnviarFacturaRequest', 'https://webservice.face.gob.es');
-    }
+  class wsdlBiscayTIK extends FACeBiskaytik {
   }
