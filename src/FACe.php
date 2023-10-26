@@ -22,27 +22,25 @@
     public const WSDL_DEV = 'https://se-face-webservice.redsara.es/facturasspp?wsdl';
     public const WSDL     = 'https://webservice.face.gob.es/facturasspp?wsdl';
 
-    protected $wsdl = self::WSDL;
     protected $private_key = null;
     protected $public_key = null;
 
-    public static function create (string $wsClassName, ?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) : FACe {
-      return new $wsClassName($pkcs12_file, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
+    public static function create (string $wsClassName, ?string $pkcs12 = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) : FACe {
+      return new $wsClassName($pkcs12, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
     }
 
-    public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
+    public function __construct (?string $pkcs12 = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
-			$this->wsdl = $options['location'];
 
       if (empty($options['stream_context'])) {
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
       }
 
-      if ($pkcs12_file and is_file($pkcs12_file) and $pkcs12_pass) {
-        $this->set_pkcs12($pkcs12_file, $pkcs12_pass);
+      if ($pkcs12 and $pkcs12_pass) {
+        $this->set_pkcs12($pkcs12, $pkcs12_pass);
       }
 
-      return parent::__construct($this->wsdl, $options);
+      parent::__construct($options['location'], $options);
     }
 
     protected function stream_context (bool $ssl_verifypeer = true, array $options = []) {
@@ -63,15 +61,40 @@
       return parent::__doRequest($request_signed, $location, $action, $version, $oneWay);
     }
 
-    public function set_pkcs12 (string $pkcs12_file, string $pkcs12_pass) : bool {
-      if (is_file($pkcs12_file) and !empty($pkcs12_pass)) {
-        if (openssl_pkcs12_read(file_get_contents($pkcs12_file), $certs, $pkcs12_pass)) {
-          $this->private_key = $certs['pkey'];
-          $this->public_key = $certs['cert'];
-          return true;
-        }
+    public function set_pkcs12 (string $pkcs12, string $pkcs12_pass) : bool {
+      if (empty($pkcs12_pass)) {
+        return false;
       }
-      return false;
+
+      if (is_file($pkcs12)) {
+        $pkcs12 = file_get_contents($pkcs12);
+      }
+
+      if (!openssl_pkcs12_read($pkcs12, $certs, $pkcs12_pass)) {
+        return false;
+      }
+
+      $this->private_key = $certs['pkey'];
+      $this->public_key = $certs['cert'];
+      return true;
+    }
+
+    public function set_private_key (string $private_key, ?string $passphrase = null) : bool {
+      $pkey = openssl_pkey_get_private($private_key, $passphrase);
+      if ($pkey === false) {
+        return false;
+      }
+
+      return openssl_pkey_export($pkey, $this->private_key);
+    }
+
+    public function set_public_key (string $public_key) {
+      if (openssl_pkey_get_public($public_key) === false) {
+        return false;
+      }
+
+      $this->public_key = $public_key;
+      return true;
     }
 
     public function signRequest (string $request) {
