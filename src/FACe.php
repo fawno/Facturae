@@ -146,7 +146,7 @@
     }
 
     public static function ArrayOfSSPPFicheroAnexo (array $anexos) : SoapVar {
-      return new SoapVar(array_map('FACe::SSPPFicheroAnexo', $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
+      return new SoapVar(array_map(self::class . '::SSPPFicheroAnexo', $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
     }
 
     public static function SSPPFicheroAnexo (string $filename, ?string $mimetype = null) : SoapVar {
