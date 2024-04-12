@@ -22,6 +22,7 @@
     public const WSDL_DEV = 'https://se-face-webservice.redsara.es/facturasspp?wsdl';
     public const WSDL     = 'https://webservice.face.gob.es/facturasspp?wsdl';
 
+    protected string $endpoint = self::WSDL;
     protected $private_key = null;
     protected $public_key = null;
 
@@ -31,6 +32,9 @@
 
     public function __construct (?string $pkcs12 = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
+      $this->endpoint = $options['location'];
+
+      $wsdl = $options['wsdl'] ?? $this->endpoint;
 
       if (empty($options['stream_context'])) {
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
@@ -40,7 +44,11 @@
         $this->set_pkcs12($pkcs12, $pkcs12_pass);
       }
 
-      parent::__construct($options['location'], $options);
+      parent::__construct($wsdl, $options);
+    }
+
+    public function getEndpoint () : string {
+      return $this->endpoint;
     }
 
     protected function stream_context (bool $ssl_verifypeer = true, array $options = []) {
@@ -97,7 +105,11 @@
       return true;
     }
 
-    public function signRequest (string $request) {
+    public function signRequest (string $request) : string {
+      if (empty($this->public_key) and empty($this->private_key)) {
+        return $request;
+      }
+
       $doc = new DOMDocument('1.0');
       $doc->loadXML($request);
 
