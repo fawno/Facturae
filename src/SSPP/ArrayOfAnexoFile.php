@@ -10,14 +10,13 @@
 */
   declare(strict_types=1);
 
-  namespace Fawno\Facturae;
+  namespace Fawno\Facturae\SSPP;
 
-  use Fawno\Facturae\FACe;
-  use Fawno\Facturae\SSPP\SSPPFactura2;
   use SoapVar;
+  use Fawno\Facturae\SSPP\AnexoFile;
 
-  class FACe2 extends FACe {
-    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
-      return SSPPFactura2::create($correo, $fichero_factura, $anexos);
+  class ArrayOfAnexoFile {
+    public static function create (array $anexos) : SoapVar {
+      return new SoapVar(array_map([AnexoFile::class, 'create'], $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
     }
   }

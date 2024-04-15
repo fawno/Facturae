@@ -13,6 +13,7 @@
   namespace Fawno\Facturae;
 
   use DOMDocument;
+  use Fawno\Facturae\SSPP\SSPPFactura;
   use SoapClient;
   use SoapVar;
   use RobRichards\WsePhp\WSSESoap;
@@ -125,53 +126,6 @@
     }
 
     public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
-      $SSPPFactura = [
-        'correo' => $correo,
-        'fichero_factura' => self::SSPPFicheroFactura($fichero_factura),
-        'ficheros_anexos' => self::ArrayOfSSPPFicheroAnexo($anexos),
-      ];
-
-      return new SoapVar((object) $SSPPFactura, SOAP_ENC_OBJECT, 'EnviarFacturaRequest', 'https://webservice.face.gob.es');
-    }
-
-    public static function SSPPFicheroFactura (string $filename, ?string $mimetype = null) : SoapVar {
-      if (empty($mimetype) and function_exists('mime_content_type')) {
-        $mimetype = mime_content_type($filename);
-
-        // PHP 7.2.x identifies xml files as "text/xml" instead of "application/xml"
-        if ($mimetype == 'text/xml') {
-          $mimetype = 'application/xml';
-        }
-      }
-
-      $file = base64_encode(file_get_contents($filename));
-      // Remove BOM in BASE64 encoding for FACeGV
-      $file = preg_replace('~^77u/~', '', $file);
-
-      $SSPPFicheroFactura = [
-        'factura' => $file,
-        'nombre' => basename($filename),
-        'mime' => $mimetype,
-      ];
-
-      return new SoapVar((object) $SSPPFicheroFactura, SOAP_ENC_OBJECT, 'FacturaFile', 'https://webservice.face.gob.es');
-    }
-
-    public static function ArrayOfSSPPFicheroAnexo (array $anexos) : SoapVar {
-      return new SoapVar(array_map(self::class . '::SSPPFicheroAnexo', $anexos), SOAP_ENC_ARRAY, 'ArrayOfAnexoFile', 'https://webservice.face.gob.es');
-    }
-
-    public static function SSPPFicheroAnexo (string $filename, ?string $mimetype = null) : SoapVar {
-      if (empty($mimetype) and function_exists('mime_content_type')) {
-        $mimetype = mime_content_type($filename);
-      }
-
-      $SSPPFicheroAnexo = [
-        'anexo' => base64_encode(file_get_contents($filename)),
-        'nombre' => basename($filename),
-        'mime' => $mimetype,
-      ];
-
-      return new SoapVar((object) $SSPPFicheroAnexo, SOAP_ENC_OBJECT, 'AnexoFile', 'https://webservice.face.gob.es');
+      return SSPPFactura::create($correo, $fichero_factura, $anexos);
     }
   }

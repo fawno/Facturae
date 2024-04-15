@@ -10,14 +10,14 @@
 */
   declare(strict_types=1);
 
-  namespace Fawno\Facturae;
+  namespace Fawno\Facturae\SSPP;
 
-  use Fawno\Facturae\FACe;
-  use Fawno\Facturae\SSPP\SSPPFactura2;
   use SoapVar;
 
-  class FACe2 extends FACe {
-    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
-      return SSPPFactura2::create($correo, $fichero_factura, $anexos);
+  trait SSPPFacturaTrait {
+    public static function create (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
+      $SSPPFactura = new self($correo, $fichero_factura, $anexos);
+
+      return new SoapVar($SSPPFactura, SOAP_ENC_OBJECT, 'EnviarFacturaRequest', 'https://webservice.face.gob.es');
     }
   }
