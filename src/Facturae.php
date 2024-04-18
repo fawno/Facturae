@@ -12,24 +12,22 @@
 
   namespace Fawno\Facturae;
 
+  use DateTimeImmutable;
   use DOMDocument;
   use DOMNode;
-  use Exception;
-  use RobRichards\XMLSecLibs\XMLSecEnc;
-  use RobRichards\XMLSecLibs\XMLSecurityDSig;
   use SimpleXMLElement;
   use XSLTProcessor;
 
   class Facturae extends SimpleXMLElement {
-		protected const VERSION320 = '3.2';
-		protected const VERSION321 = '3.2.1';
-		protected const VERSION322 = '3.2.2';
-
-    protected const XSD_FILES = [
-			self::VERSION320 => __DIR__ . '/Schema/Facturae_v320.xsd',
-			self::VERSION321 => __DIR__ . '/Schema/Facturae_v321.xsd',
-			self::VERSION322 => __DIR__ . '/Schema/Facturae_v322.xsd',
+		public const ROLE_TYPES = [
+			'01' => 'oc',
+			'02' => 'og',
+			'03' => 'ut',
 		];
+
+    public const VERSION320 = '3.2';
+		public const VERSION321 = '3.2.1';
+		public const VERSION322 = '3.2.2';
 
     protected const XSL_FILES = [
 			self::VERSION320 => __DIR__ . '/Stylesheet/Facturae_v320.xsl',
@@ -47,7 +45,7 @@
 		}
 
 		public static function loadFile (string $filename, string $class_name = self::class, int $options = 0, string $ns = '', bool $is_prefix = false) : ?Facturae {
-			return simplexml_load_file($filename, self::class, $options, $ns, $is_prefix) ?? null;
+			return simplexml_load_file($filename, $class_name, $options, $ns, $is_prefix) ?? null;
 		}
 
 		public static function loadXML (string $data, string $class_name = self::class, int $options = 0, string $ns = '', bool $is_prefix = false) : ?Facturae {
@@ -61,13 +59,13 @@
     }
 
     public function asHTML () : ?string {
-      $version = (string) $this->FileHeader->SchemaVersion ?? null;
+      $version = $this->getSchemaVersion();
       $xslfile = self::XSL_FILES[$version] ?? null;
 
 			return self::transformToXML($this, self::loadFile($xslfile)) ?? null;
     }
 
-    public static function transformToXML (Facturae $source, Facturae $style) {
+    public static function transformToXML (SimpleXMLElement $source, SimpleXMLElement $style) {
 			$proc = new XSLTProcessor;
 			$proc->importStyleSheet($style);
 
@@ -75,7 +73,7 @@
     }
 
     public function transformVersion () : Facturae {
-      $version = (string) $this->FileHeader->SchemaVersion ?? null;
+      $version = $this->getSchemaVersion();
       $xsltfile = self::XSLT_FILES[$version] ?? null;
 
       if (!is_file($xsltfile)) {
@@ -91,51 +89,58 @@
       return self::loadXML($xml);
     }
 
-    public function verifySignature () : void {
-			$objXMLSecDSig = new XMLSecurityDSig();
-			$objDSig = $objXMLSecDSig->locateSignature($this->asDOM());
-			if (!$objDSig) {
-				throw new Exception('Cannot locate signature node');
-			}
-
-			$objXMLSecDSig->canonicalizeSignedInfo();
-			$objKey = $objXMLSecDSig->locateKey();
-			if (!$objKey) {
-				throw new Exception('Cannot locate key node');
-			}
-
-      XMLSecEnc::staticLocateKeyInfo($objKey, $objDSig);
-
-			if (!$objXMLSecDSig->verify($objKey)) {
-				throw new Exception('Signature error');
-			}
+    public function getInvoiceNumber () : string {
+      return (string) $this->Invoices->Invoice->InvoiceHeader->InvoiceNumber;
     }
 
-    public function validateSchema () : array {
-      $version = (string) $this->FileHeader->SchemaVersion ?? null;
-      $xsdfile = self::XSD_FILES[$version] ?? null;
+    public function getInvoiceSeries () : string {
+      return (string) $this->Invoices->Invoice->InvoiceHeader->InvoiceSeriesCode;
+    }
 
-      $errors = [];
+    public function getSellerTIN () : string {
+      return (string) $this->Parties->SellerParty->TaxIdentification->TaxIdentificationNumber;
+    }
 
-      if (!$xsdfile or !is_file($xsdfile)) {
-				throw new Exception('Version not supported');
+    public function getBuyerTIN () : string {
+      return (string) $this->Parties->BuyerParty->TaxIdentification->TaxIdentificationNumber;
+    }
+
+    public function getIssueDate () : DateTimeImmutable {
+      $date = (string) $this->Invoices->Invoice->InvoiceIssueData->IssueDate ?? '';
+      return new DateTimeImmutable($date);
+    }
+
+    public function getIBAN () : ?string {
+			$invoice_iban1 = (string) $this->Invoices->Invoice->PaymentDetails->Installment->AccountToBeCredited->IBAN;
+			$invoice_iban2 = (string) $this->Invoices->Invoice->PaymentDetails->Installment->AccountToBeDebited->IBAN;
+			$invoice_iban = !empty($invoice_iban1) ? $invoice_iban1 : $invoice_iban2;
+
+      return (!empty($invoice_iban) ? $invoice_iban : null);
+    }
+
+    public function getAdministrativeCentres () : array {
+      $centres = [];
+
+      foreach ($this->Parties->BuyerParty->AdministrativeCentres->AdministrativeCentre ?? [] as $centre) {
+        $centres[(string) $centre->RoleTypeCode] = $centre;
       }
 
+      return $centres;
+    }
 
-      $xml = $this->asDOM();
+    public function getDIR3 () : array {
+      $dir3 = [];
 
-      $signature = $xml->getElementsByTagName('Signature')->item(0) ?? null;
-      if ($signature) {
-        $signature->parentNode->removeChild($signature);
-      }
-
-      libxml_use_internal_errors(true);
-      if (!$xml->schemaValidate($xsdfile)) {
-        foreach (libxml_get_errors() as $error) {
-          $errors[] = (array) $error;
+      foreach ($this->getAdministrativeCentres() as $role => $centre) {
+        if (self::ROLE_TYPES[$role] ?? false) {
+          $dir3[self::ROLE_TYPES[$role]] = str_replace(' ', '', (string) $centre->CentreCode);
         }
       }
 
-      return $errors;
+      return $dir3;
+    }
+
+    public function getSchemaVersion () : ?string {
+      return (string) $this->FileHeader->SchemaVersion ?? null;
     }
   }
