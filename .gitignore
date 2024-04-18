@@ -21,6 +21,10 @@ Thumbs.db
 
 # Tool specific files #
 #######################
+/vendor
+/tmp
+.phpunit.cache
+.workflows
 /.vscode
 /composer.lock
 # vim

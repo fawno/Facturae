@@ -13,15 +13,34 @@
     "source": "https://github.com/fawno/Facturae"
   },
   "require": {
-    "php": ">=5.6.0",
+    "php": ">=7.4.0",
+    "ext-dom": "*",
     "ext-openssl": "*",
+    "ext-simplexml": "*",
     "ext-soap": "*",
+    "ext-xsl": "*",
     "robrichards/xmlseclibs": "@stable",
-    "robrichards/wse-php": "@stable"
+    "robrichards/wse-php": "@stable",
+    "globalcitizen/php-iban": "@stable",
+    "fawno/face-relations": "@stable"
   },
   "autoload": {
     "psr-4": {
       "Fawno\\Facturae\\": "src"
     }
+  },
+  "autoload-dev": {
+      "psr-4": {
+          "Fawno\\Facturae\\Tests\\": "tests/"
+      }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "@stable"
+  },
+  "scripts": {
+      "test": "phpunit"
+  },
+  "scripts-descriptions": {
+      "test": "Run PHPUnit tests"
   }
 }
