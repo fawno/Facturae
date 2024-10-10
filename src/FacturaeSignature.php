@@ -12,6 +12,8 @@
 
   namespace Fawno\Facturae;
 
+  use DateTimeImmutable;
+  use DOMNode;
   use Error;
   use Exception;
   use Fawno\Facturae\Error\Signature\InvalidSignatureError;
@@ -23,6 +25,7 @@
   use Fawno\Facturae\Facturae;
   use RobRichards\XMLSecLibs\XMLSecEnc;
   use RobRichards\XMLSecLibs\XMLSecurityDSig;
+  use RobRichards\XMLSecLibs\XMLSecurityKey;
 
   class FacturaeSignature {
     protected ?Error $error = null;
@@ -36,7 +39,7 @@
         return $this;
       }
 
-      if (!$signature) {
+      if (!($signature instanceof DOMNode)) {
         $this->error = new MissingSignatureError('Missing signature node');
         return $this;
       }
@@ -49,7 +52,7 @@
         return $this;
       }
 
-      if (!$key) {
+      if (!($key instanceof XMLSecurityKey)) {
         $this->error = new MissingKeySignatureError('Missing key node');
         return $this;
       }
@@ -69,6 +72,26 @@
 
       if (1 !== $verify) {
         $this->error = new InvalidSignatureError('Invalid signature');
+      }
+
+      $cert = $key->getX509Certificate();
+      if (!$cert) {
+        return $this;
+      }
+
+      $issue_date_t = $facturae->getIssueDate()->getTimestamp();
+      $data = openssl_x509_parse($cert);
+
+      if ($issue_date_t < $data['validFrom_time_t']) {
+        $valid_from = (new DateTimeImmutable('@' . $data['validFrom_time_t']))->format('Y-m-d H:i:s');
+        $this->error = new InvalidSignatureError(sprintf('Certificate valid from %s', $valid_from));
+        return $this;
+      }
+
+      if ($data['validTo_time_t'] < $issue_date_t) {
+        $valid_to = (new DateTimeImmutable('@' . $data['validTo_time_t']))->format('Y-m-d H:i:s');
+        $this->error = new InvalidSignatureError(sprintf('Expired certificate: %s', $valid_to));
+        return $this;
       }
     }
 
