@@ -15,6 +15,8 @@
   use DateTimeImmutable;
   use DOMDocument;
   use DOMNode;
+  use Exception;
+  use RobRichards\XMLSecLibs\XMLSecurityDSig;
   use SimpleXMLElement;
   use XSLTProcessor;
 
@@ -56,6 +58,33 @@
       $dom = new DOMDocument();
 
       return $dom->loadXML($this->asXML()) ? $dom : null;
+    }
+
+    public function isSigned () : ?bool {
+      try {
+        $objXMLSecDSig = new XMLSecurityDSig();
+
+        $signature = $objXMLSecDSig->locateSignature($this->asDOM());
+
+        return ($signature instanceof DOMNode);
+      } catch (Exception $exception) {
+        return null;
+      }
+    }
+
+    public function removeSignature () : Facturae {
+      try {
+        $objXMLSecDSig = new XMLSecurityDSig();
+
+        $unsigned = $this->asDOM();
+
+        $signature = $objXMLSecDSig->locateSignature($unsigned);
+        $signature->parentNode->removeChild($signature);
+
+        return self::importDOM($unsigned);
+      } catch (Exception $exception) {
+        return $this;
+      }
     }
 
     public function asHTML () : ?string {
