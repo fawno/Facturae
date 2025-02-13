@@ -97,6 +97,26 @@
       return (string) $this->Invoices->Invoice->InvoiceHeader->InvoiceSeriesCode;
     }
 
+    public function getSellerEmail () : string {
+      return (string) $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail;
+    }
+
+    public function setSellerEmail (string $email) : string {
+      $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail = $email;
+
+      return (string) $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail;
+    }
+
+    public function getBuyerEmail () : string {
+      return (string) $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail;
+    }
+
+    public function setBuyerEmail (string $email) : string {
+      $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail = $email;
+
+      return (string) $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail;
+    }
+
     public function getSellerTIN () : string {
       return (string) $this->Parties->SellerParty->TaxIdentification->TaxIdentificationNumber;
     }
