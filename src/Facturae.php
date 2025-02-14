@@ -79,7 +79,18 @@
         $unsigned = $this->asDOM();
 
         $signature = $objXMLSecDSig->locateSignature($unsigned);
+
+        if (!($signature instanceof DOMNode)) {
+          return $this;
+        }
+
         $signature->parentNode->removeChild($signature);
+
+        $namespaces = array_flip($this->getDocNamespaces());
+        $localName = $namespaces[FacturaeSigner::XMLNS_DS] ?? null;
+        if ($localName) {
+          $unsigned->documentElement->removeAttributeNS(FacturaeSigner::XMLNS_DS, $localName);
+        }
 
         return self::importDOM($unsigned);
       } catch (Exception $exception) {
