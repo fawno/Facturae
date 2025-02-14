@@ -86,9 +86,9 @@
 
         $signature->parentNode->removeChild($signature);
 
-        $namespaces = array_flip($this->getDocNamespaces());
-        $localName = $namespaces[FacturaeSigner::XMLNS_DS] ?? null;
-        if ($localName) {
+        $localName = array_search(FacturaeSigner::XMLNS_DS, $this->getDocNamespaces());
+
+        if (is_string($localName)) {
           $unsigned->documentElement->removeAttributeNS(FacturaeSigner::XMLNS_DS, $localName);
         }
 
