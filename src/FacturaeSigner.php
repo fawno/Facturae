@@ -13,7 +13,6 @@
   namespace Fawno\Facturae;
 
   use Fawno\Facturae\Signer\CertificateStore;
-  use Fawno\Facturae\Signer\DOMDocumentExtended;
   use Fawno\Facturae\Signer\SignatureIds;
 
   final class FacturaeSigner {
@@ -28,7 +27,7 @@
       $signingTime = empty($signingTime) ? time() : $signingTime;
       $signingTime = is_string($signingTime) ? strtotime($signingTime) : $signingTime;
 
-      $unsigned = DOMDocumentExtended::loadFacturae($facturae->removeSignature());
+      $unsigned = $facturae->removeSignature()->asDOM();
       $unsigned->createAttributeNS(self::XMLNS_DS, 'ds:attr');
 
       $xmlns = $unsigned->getDocumentNamespaces(['xmlns:xades' => self::XMLNS_XADES]);
@@ -138,6 +137,6 @@
 
       $unsigned->documentElement->append($dsSignature);
 
-      return Facturae::importDOM($unsigned);
+      return $unsigned->asFacturae();
     }
   }

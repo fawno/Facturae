@@ -13,9 +13,9 @@
   namespace Fawno\Facturae;
 
   use DateTimeImmutable;
-  use DOMDocument;
   use DOMNode;
   use Exception;
+  use Fawno\Facturae\Signer\DOMDocumentExtended;
   use RobRichards\XMLSecLibs\XMLSecurityDSig;
   use SimpleXMLElement;
   use XSLTProcessor;
@@ -54,10 +54,8 @@
 			return simplexml_load_string($data, $class_name, $options, $ns, $is_prefix) ?? null;
 		}
 
-    public function asDOM () : ?DOMDocument {
-      $dom = new DOMDocument();
-
-      return $dom->loadXML($this->asXML()) ? $dom : null;
+    public function asDOM () : ?DOMDocumentExtended {
+      return DOMDocumentExtended::loadFacturae($this);
     }
 
     public function asBase64 () : string {

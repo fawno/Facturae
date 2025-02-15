@@ -23,6 +23,10 @@
       return $dom->loadXML($facturae->asXML()) ? $dom : null;
     }
 
+    public function asFacturae () : ?Facturae {
+      return Facturae::importDOM($this);
+    }
+
     public function getDocumentAttributes () : array {
       $attrs = [];
 
