@@ -38,6 +38,9 @@
       'organizationIdentifier' => 'OID.2.5.4.97',
       'serialNumber'           => 'OID.2.5.4.5',
       'title'                  => 'OID.2.5.4.12',
+
+      // Fix for undefined properties in OpenSSL <3.0.0
+      'UNDEF'                  => 'OID.2.5.4.97',
     ];
 
     private OpenSSLCertificate|false $certificate = false;
@@ -135,22 +138,18 @@
 
     public static function getCertDistinguishedName (array $data) : string {
       $name = [];
-      foreach ($data as $rawType => $rawValues) {
-        $values = is_array($rawValues) ? $rawValues : [$rawValues];
+      $data = array_intersect_key($data, self::ALLOWED_OID_TYPES);
+      foreach ($data as $rawType => $rawValue) {
+        $values = is_array($rawValue) ? $rawValue : [$rawValue];
         foreach ($values as $value) {
-          $type = self::ALLOWED_OID_TYPES[$rawType] ?? null;
-          if (!is_null($type)) {
-            $name[] = $type . '=' . $value;
-            continue;
-          }
-
           // Fix for undefined properties in OpenSSL <3.0.0
           if ($rawType === 'UNDEF') {
             $decodedValue = (substr($value, 0, 1) === '#') ? hex2bin(substr($value, 5)) : $value;
-            if (preg_match('~^VAT[A-Z]{2}-~', $decodedValue) === 1) {
-              $name[] = 'OID.2.5.4.97=' . $value;
+            if (!preg_match('~^VAT[A-Z]{2}-~', $decodedValue)) {
+              continue;
             }
           }
+          $name[] = self::ALLOWED_OID_TYPES[$rawType] . '=' . $value;
         }
       }
 
@@ -175,7 +174,7 @@
       return $pretty ? self::prettify($res) : $res;
     }
 
-    private static function prettify (string $input) : string {
+    public static function prettify (string $input) : string {
       return chunk_split($input, 76, "\n");
     }
 
@@ -207,7 +206,7 @@
       return self::getCertDistinguishedName($this->publicData['issuer']);
     }
 
-    private function getPrivateKey () : OpenSSLAsymmetricKey {
+    public function getPrivateKey () : OpenSSLAsymmetricKey {
       return $this->privateKey;
     }
 
