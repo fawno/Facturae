@@ -22,8 +22,38 @@
     const SIGN_POLICY_URL = 'http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf';
     const SIGN_POLICY_DIGEST = 'Ohixl6upD6av8N7pEvDABhEL6hM=';
 
+    public static function randomId () : int {
+      return function_exists('random_int') ? random_int(0x10000000, 0x7FFFFFFF) : rand(100000, 999999);
+    }
+
+    public static function getSignatureIds () : object {
+      return new class {
+        public string $signatureId;
+        public string $signedInfoId;
+        public string $signedPropertiesId;
+        public string $signatureValueId;
+        public string $certificateId;
+        public string $referenceId;
+        public string $signatureSignedPropertiesId;
+        public string $signatureObjectId;
+        public string $timestampId;
+
+        public function __construct () {
+          $this->signatureId = 'Signature' . FacturaeSigner::randomId();
+          $this->signedInfoId = 'Signature-SignedInfo' . FacturaeSigner::randomId();
+          $this->signedPropertiesId = 'SignedPropertiesID' . FacturaeSigner::randomId();
+          $this->signatureValueId = 'SignatureValue' . FacturaeSigner::randomId();
+          $this->certificateId = 'Certificate' . FacturaeSigner::randomId();
+          $this->referenceId = 'Reference-ID-' . FacturaeSigner::randomId();
+          $this->signatureSignedPropertiesId = $this->signatureId . '-SignedProperties' . FacturaeSigner::randomId();
+          $this->signatureObjectId = $this->signatureId . '-Object' . FacturaeSigner::randomId();
+          $this->timestampId = 'Timestamp-' . FacturaeSigner::randomId();
+        }
+      };
+    }
+
     public static function sign (Facturae $facturae, CertificateStore $certificateStore, int|string|null $signingTime = null) : ?Facturae {
-      $ids = new SignatureIds();
+      $ids = self::getSignatureIds();
       $signingTime = empty($signingTime) ? time() : $signingTime;
       $signingTime = is_string($signingTime) ? strtotime($signingTime) : $signingTime;
 
