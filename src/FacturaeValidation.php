@@ -61,6 +61,10 @@
 			}
     }
 
+    public static function validate (Facturae $facturae) : FacturaeValidation {
+      return new self($facturae);
+    }
+
     public function isValid () : bool {
       return !((bool) count($this->errors));
     }

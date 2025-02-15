@@ -12,7 +12,9 @@
 
   namespace Fawno\Facturae\Error;
 
-  class FacturaeError extends \Error {
+  use Error;
+
+  class FacturaeError extends Error {
     public const SIGNATURE = 0x000010000;
     public const BUYERTIN  = 0x000020000;
     public const IBAN      = 0x000040000;

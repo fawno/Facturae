@@ -60,6 +60,10 @@
       return $dom->loadXML($this->asXML()) ? $dom : null;
     }
 
+    public function asBase64 () : string {
+      return base64_encode($this->asXML());
+    }
+
     public function isSigned () : ?bool {
       try {
         $objXMLSecDSig = new XMLSecurityDSig();
