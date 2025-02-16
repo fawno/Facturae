@@ -9,9 +9,14 @@ env:
   COMPOSER_ROOT_VERSION: dev-main
 
 jobs:
-  build:
+  tests:
+    name: Run tests
 
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['8.0', '8.1', '8.2', '8.3', '8.4']
 
     steps:
     - uses: actions/checkout@v4
@@ -33,13 +38,12 @@ jobs:
     - name: Install dependencies
       uses: php-actions/composer@v6
       with:
+        php_version: ${{ matrix.php-version }}
         php_extensions: dom openssl simplexml soap xsl
         args: --prefer-dist --no-progress
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
 
     - name: Run test suite
       uses: php-actions/phpunit@v4
       with:
+        php_version: ${{ matrix.php-version }}
         php_extensions: dom openssl simplexml soap xsl
