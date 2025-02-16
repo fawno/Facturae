@@ -63,38 +63,15 @@
     }
 
     public function isSigned () : ?bool {
-      try {
-        $objXMLSecDSig = new XMLSecurityDSig();
-
-        $signature = $objXMLSecDSig->locateSignature($this->asDOM());
-
-        return ($signature instanceof DOMNode);
-      } catch (Exception $exception) {
-        return null;
-      }
+      return $this->asDOM()->isSigned();
     }
 
     public function removeSignature () : Facturae {
       try {
-        $objXMLSecDSig = new XMLSecurityDSig();
+        $signed = $this->asDOM();
+        $unsigned = $signed->removeSignature();
 
-        $unsigned = $this->asDOM();
-
-        $signature = $objXMLSecDSig->locateSignature($unsigned);
-
-        if (!($signature instanceof DOMNode)) {
-          return $this;
-        }
-
-        $signature->parentNode->removeChild($signature);
-
-        $localName = array_search(FacturaeSigner::XMLNS_DS, $this->getDocNamespaces());
-
-        if (is_string($localName)) {
-          $unsigned->documentElement->removeAttributeNS(FacturaeSigner::XMLNS_DS, $localName);
-        }
-
-        return self::importDOM($unsigned);
+        return $unsigned->asFacturae();
       } catch (Exception $exception) {
         return $this;
       }
