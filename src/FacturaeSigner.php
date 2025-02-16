@@ -13,7 +13,7 @@
   namespace Fawno\Facturae;
 
   use Fawno\Facturae\Signer\CertificateStore;
-  use Fawno\Facturae\Signer\SignatureIds;
+  use Fawno\Facturae\Signer\DOMDocumentExtended;
 
   final class FacturaeSigner {
     const XMLNS_DS = 'http://www.w3.org/2000/09/xmldsig#';
@@ -52,7 +52,7 @@
       };
     }
 
-    public static function sign (Facturae $facturae, CertificateStore $certificateStore, int|string|null $signingTime = null) : ?Facturae {
+    public static function sign (Facturae|DOMDocumentExtended $facturae, CertificateStore $certificateStore, int|string|null $signingTime = null) : ?Facturae {
       $ids = self::getSignatureIds();
       $signingTime = empty($signingTime) ? time() : $signingTime;
       $signingTime = is_string($signingTime) ? strtotime($signingTime) : $signingTime;
@@ -60,7 +60,7 @@
       $unsigned = $facturae->removeSignature()->asDOM();
       $unsigned->createAttributeNS(self::XMLNS_DS, 'ds:attr');
 
-      $xmlns = $unsigned->getDocumentNamespaces(['xmlns:xades' => self::XMLNS_XADES]);
+      $xmlns = $unsigned->getDocNamespaces(['xmlns:xades' => self::XMLNS_XADES]);
 
       // Build <xades:SignedProperties /> element
       $xadesSignedProperties = $unsigned->createElement('xades:SignedProperties');
