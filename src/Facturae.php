@@ -16,7 +16,6 @@
   use DOMNode;
   use Exception;
   use Fawno\Facturae\Signer\DOMDocumentExtended;
-  use RobRichards\XMLSecLibs\XMLSecurityDSig;
   use SimpleXMLElement;
   use XSLTProcessor;
 
