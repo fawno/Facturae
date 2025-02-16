@@ -51,6 +51,8 @@
 					{
 						FONT-SIZE: 9pt;
 						FONT-FAMILY: Arial,Helvetica,sans-serif
+						word-break: break-all;  
+						word-wrap: break-word;
 					}
 					TR
 					{
@@ -771,7 +773,7 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td width="100%" align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalInvoicesAmount/TotalAmount"/>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalInvoicesAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -780,7 +782,8 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalInvoicesAmount/EquivalentInEuros"/>																		</td>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalInvoicesAmount/EquivalentInEuros,'#.##0,00')"/>
+																		</td>
 																	</tr>
 																</table>
 															</td>
@@ -793,7 +796,7 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td width="100%" align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalOutstandingAmount/TotalAmount"/>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalOutstandingAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -802,7 +805,7 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalOutstandingAmount/EquivalentInEuros"/>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalOutstandingAmount/EquivalentInEuros,'#.##0,00')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -816,7 +819,7 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td width="100%" align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalExecutableAmount/TotalAmount"/>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalExecutableAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -825,7 +828,7 @@
 																<table border="0" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																			<xsl:value-of select="FileHeader/Batch/TotalExecutableAmount/EquivalentInEuros"/>
+																			<xsl:value-of select="format-number(FileHeader/Batch/TotalExecutableAmount/EquivalentInEuros,'#.##0,00')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -843,7 +846,7 @@
 																<table border="1" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																				<xsl:value-of select="FileHeader/Batch/TotalInvoicesAmount/TotalAmount"/>
+																				<xsl:value-of select="format-number(FileHeader/Batch/TotalInvoicesAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -859,7 +862,7 @@
 																<table border="1" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																				<xsl:value-of select="FileHeader/Batch/TotalOutstandingAmount/TotalAmount"/>
+																				<xsl:value-of select="format-number(FileHeader/Batch/TotalOutstandingAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -875,7 +878,7 @@
 																<table border="1" cellpadding="0" cellspacing="0" width="100%">
 																	<tr>
 																		<td align="right">
-																				<xsl:value-of select="FileHeader/Batch/TotalExecutableAmount/TotalAmount"/>
+																				<xsl:value-of select="format-number(FileHeader/Batch/TotalExecutableAmount/TotalAmount,'#.##0,00######')"/>
 																		</td>
 																	</tr>
 																</table>
@@ -1928,10 +1931,10 @@
 															<xsl:value-of select="substring(InvoiceIssueData/IssueDate,9,2)"/>-<xsl:value-of select="substring(InvoiceIssueData/IssueDate,6,2)"/>-<xsl:value-of select="substring(InvoiceIssueData/IssueDate,1,4)"/>
 														</td>
 														<td align="right">
-															<xsl:value-of select="InvoiceTotals/TotalGrossAmount"/>
+															<xsl:value-of select="format-number(InvoiceTotals/TotalGrossAmount,'#.##0,00######')"/>
 														</td>
 														<td align="right">
-															<xsl:value-of select="InvoiceTotals/TotalExecutableAmount"/>
+															<xsl:value-of select="format-number(InvoiceTotals/TotalExecutableAmount,'#.##0,00######')"/>
 														</td>											
 													</tr>
 													</xsl:for-each>
@@ -2599,7 +2602,7 @@
 														<xsl:value-of select="substring(InstallmentDueDate,9,2)"/>-<xsl:value-of select="substring(InstallmentDueDate,6,2)"/>-<xsl:value-of select="substring(InstallmentDueDate,1,4)"/>
 													</td>
 													<td width="6%" valign="top" align="right">
-														<xsl:value-of select="InstallmentAmount"/>								
+														<xsl:value-of select="format-number(InstallmentAmount,'#.##0,00')"/>								
 													</td>
 													<td width="10%" valign="top"  align="center">
 														<script>
@@ -3060,13 +3063,13 @@
 											</xsl:choose>
 										</td>
 										<td width="10%" valign="top" align="right">
-											<xsl:value-of select="Quantity"/>
+											<xsl:value-of select="format-number(Quantity,'#.##0,00')"/>
 										</td>
 										<td width="15%" valign="top" align="right">
-											<xsl:value-of select="UnitPriceWithoutTax"/>
+											<xsl:value-of select="format-number(UnitPriceWithoutTax,'#.##0,00######')"/>
 										</td>
 										<td width="15%" valign="top" align="right">
-											<xsl:value-of select="TotalCost"/>
+											<xsl:value-of select="format-number(TotalCost,'#.##0,00######')"/>
 										</td>
 									</tr>
 								</xsl:for-each>
@@ -3104,7 +3107,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalGrossAmount"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalGrossAmount,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -3149,7 +3152,7 @@
 																<td width="100%" align="center">
 																	<xsl:choose>
 																		<xsl:when test='DiscountRate!=""' >
-																			<xsl:value-of select="DiscountRate"/>
+																			<xsl:value-of select="format-number(DiscountRate,'#.##0,00######')"/>
 																		</xsl:when>
 																		<xsl:otherwise>
 																			-
@@ -3165,7 +3168,7 @@
 														<xsl:for-each select="InvoiceTotals/GeneralDiscounts/Discount">
 															<tr>
 																<td align="right">
-																	<xsl:value-of select="DiscountAmount"/>
+																	<xsl:value-of select="format-number(DiscountAmount,'#.##0,00######')"/>
 																</td>
 															</tr>
 														</xsl:for-each>
@@ -3192,7 +3195,7 @@
 																<font class="titulopeque">
 																	<xsl:choose>
 																		<xsl:when test='InvoiceTotals/TotalGeneralDiscounts!=""' >
-																			<xsl:value-of select="InvoiceTotals/TotalGeneralDiscounts"/>
+																			<xsl:value-of select="format-number(InvoiceTotals/TotalGeneralDiscounts,'#.##0,00######')"/>
 																		</xsl:when>
 																		<xsl:otherwise>
 																			 0,00
@@ -3246,7 +3249,7 @@
 																<td width="100%" align="center">
 																	<xsl:choose>
 																		<xsl:when test='ChargeRate!=""' >
-																			<xsl:value-of select="ChargeRate"/>
+																			<xsl:value-of select="format-number(ChargeRate,'#.##0,00######')"/>
 																		</xsl:when>
 																		<xsl:otherwise>
 																			-
@@ -3262,7 +3265,7 @@
 														<xsl:for-each select="InvoiceTotals/GeneralSurcharges/Charge">
 															<tr>
 																<td align="right">
-																	<xsl:value-of select="ChargeAmount"/>
+																	<xsl:value-of select="format-number(ChargeAmount,'#.##0,00######')"/>
 																</td>
 															</tr>
 														</xsl:for-each>
@@ -3287,7 +3290,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalGeneralSurcharges"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalGeneralSurcharges,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -3313,7 +3316,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalGrossAmountBeforeTaxes"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalGrossAmountBeforeTaxes,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -3386,7 +3389,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='TaxRate!=""' >
-																					<xsl:value-of select="TaxRate"/>
+																					<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3404,10 +3407,10 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxableBase!=""' >
-																					<xsl:value-of select="SpecialTaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(SpecialTaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>																				
 																				<xsl:otherwise>
-																					<xsl:value-of select="TaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:otherwise>
 																			</xsl:choose>																		
 																		</td>
@@ -3422,10 +3425,10 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxAmount!=""' >
-																					<xsl:value-of select="SpecialTaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(SpecialTaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:when test='TaxAmount!=""' >
-																					<xsl:value-of select="TaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3443,7 +3446,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='EquivalenceSurcharge!=""' >
-																					<xsl:value-of select="EquivalenceSurcharge"/>
+																					<xsl:value-of select="format-number(EquivalenceSurcharge,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3461,7 +3464,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='EquivalenceSurchargeAmount!=""' >
-																					<xsl:value-of select="EquivalenceSurchargeAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(EquivalenceSurchargeAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3550,7 +3553,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='TaxRate!=""' >
-																					<xsl:value-of select="TaxRate"/>
+																					<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3568,10 +3571,10 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxableBase!=""' >
-																					<xsl:value-of select="SpecialTaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(SpecialTaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>																				
 																				<xsl:otherwise>
-																					<xsl:value-of select="TaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:otherwise>
 																			</xsl:choose>
 																		</td>
@@ -3586,10 +3589,10 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxableBase!=""' >
-																					<xsl:value-of select="SpecialTaxableBase/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(SpecialTaxableBase/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:when>																				
 																				<xsl:otherwise>
-																					<xsl:value-of select="TaxableBase/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(TaxableBase/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:otherwise>
 																			</xsl:choose>
 																		</td>
@@ -3604,10 +3607,10 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxAmount!=""' >
-																					<xsl:value-of select="SpecialTaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(SpecialTaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:when test='TaxAmount!=""' >
-																					<xsl:value-of select="TaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>						
 																				<xsl:otherwise>
 																					-
@@ -3625,10 +3628,10 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='SpecialTaxAmount!=""' >
-																					<xsl:value-of select="SpecialTaxAmount/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(SpecialTaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:when test='TaxAmount!=""' >
-																					<xsl:value-of select="TaxAmount/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(TaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3646,7 +3649,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='EquivalenceSurcharge!=""' >
-																					<xsl:value-of select="EquivalenceSurcharge"/>
+																					<xsl:value-of select="format-number(EquivalenceSurcharge,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3664,7 +3667,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='EquivalenceSurchargeAmount/TotalAmount!=""' >
-																					<xsl:value-of select="EquivalenceSurchargeAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(EquivalenceSurchargeAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3682,7 +3685,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='EquivalenceSurchargeAmount/EquivalentInEuros!=""' >
-																					<xsl:value-of select="EquivalenceSurchargeAmount/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(EquivalenceSurchargeAmount/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3714,7 +3717,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalTaxOutputs"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalTaxOutputs,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -3770,7 +3773,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='TaxRate!=""' >
-																					<xsl:value-of select="TaxRate"/>
+																					<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3788,7 +3791,7 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxableBase!=""' >
-																					<xsl:value-of select="TaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3806,7 +3809,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxAmount!=""' >
-																					<xsl:value-of select="TaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3871,7 +3874,7 @@
 																		<td width="100%" align="center">
 																			<xsl:choose>
 																				<xsl:when test='TaxRate!=""' >
-																					<xsl:value-of select="TaxRate"/>
+																					<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3889,7 +3892,7 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxableBase/TotalAmount!=""' >
-																					<xsl:value-of select="TaxableBase/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3907,7 +3910,8 @@
 																		<td width="100%" align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxableBase/EquivalentInEuros!=""' >
-																					<xsl:value-of select="TaxableBase/EquivalentInEuros"/>																				</xsl:when>
+																					<xsl:value-of select="format-number(TaxableBase/EquivalentInEuros,'#.##0,00')"/>
+																				</xsl:when>
 																				<xsl:otherwise>
 																					-
 																				</xsl:otherwise>
@@ -3924,7 +3928,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxAmount/TotalAmount!=""' >
-																					<xsl:value-of select="TaxAmount/TotalAmount"/>
+																					<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3942,7 +3946,7 @@
 																		<td align="right">
 																			<xsl:choose>
 																				<xsl:when test='TaxAmount/EquivalentInEuros!=""' >
-																					<xsl:value-of select="TaxAmount/EquivalentInEuros"/>
+																					<xsl:value-of select="format-number(TaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																				</xsl:when>
 																				<xsl:otherwise>
 																					-
@@ -3974,7 +3978,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalTaxesWithheld"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalTaxesWithheld,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4000,7 +4004,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/InvoiceTotal"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/InvoiceTotal,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4048,7 +4052,7 @@
 																<td width="100%" align="center">
 																	<xsl:choose>
 																		<xsl:when test='SubsidyRate!=""' >
-																			<xsl:value-of select="SubsidyRate"/>
+																			<xsl:value-of select="format-number(SubsidyRate,'#.##0,00######')"/>
 																		</xsl:when>
 																		<xsl:otherwise>
 																			-
@@ -4064,7 +4068,7 @@
 														<xsl:for-each select="InvoiceTotals/Subsidies/Subsidy">
 															<tr>
 																<td align="right">
-																	<xsl:value-of select="SubsidyAmount"/>
+																	<xsl:value-of select="format-number(SubsidyAmount,'#.##0,00######')"/>
 																</td>
 															</tr>
 														</xsl:for-each>
@@ -4112,7 +4116,7 @@
 														<xsl:for-each select="InvoiceTotals/PaymentsOnAccount/PaymentOnAccount">
 															<tr>
 																<td align="right">
-																	<xsl:value-of select="PaymentOnAccountAmount"/>
+																	<xsl:value-of select="format-number(PaymentOnAccountAmount,'#.##0,00')"/>
 																</td>
 															</tr>
 														</xsl:for-each>
@@ -4137,7 +4141,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalPaymentsOnAccount"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalPaymentsOnAccount,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4249,7 +4253,7 @@
 														</xsl:choose>
 													</td>
 													<td width="15%" valign="top" align="right">														
-														<xsl:value-of select="ReimbursableExpensesAmount"/>
+														<xsl:value-of select="format-number(ReimbursableExpensesAmount,'#.##0,00######')"/>
 													</td>
 												</tr>
 											</xsl:for-each>
@@ -4271,7 +4275,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalReimbursableExpenses"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalReimbursableExpenses,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4298,7 +4302,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalFinancialExpenses"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalFinancialExpenses,'#.##0,00')"/>
 																</font>
 															</td>
 														</tr>
@@ -4324,7 +4328,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalOutstandingAmount"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalOutstandingAmount,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4360,7 +4364,7 @@
 												<td width="10%" valign="top" align="center">
 													<xsl:choose>
 														<xsl:when test='InvoiceTotals/AmountsWithheld/WithholdingRate!=""' >
-															<xsl:value-of select="InvoiceTotals/AmountsWithheld/WithholdingRate"/>
+															<xsl:value-of select="format-number(InvoiceTotals/AmountsWithheld/WithholdingRate,'#.##0,00######')"/>
 														</xsl:when>
 														<xsl:otherwise>
 															-
@@ -4368,7 +4372,7 @@
 													</xsl:choose>
 												</td>
 												<td width="20%" valign="top" align="right">
-													<xsl:value-of select="InvoiceTotals/AmountsWithheld/WithholdingAmount"/>
+													<xsl:value-of select="format-number(InvoiceTotals/AmountsWithheld/WithholdingAmount,'#.##0,00######')"/>
 												</td>
 											</tr>
 										</table>					
@@ -4390,7 +4394,7 @@
 														<tr>
 															<td align="right">
 																<font class="titulopeque">
-																	<xsl:value-of select="InvoiceTotals/TotalExecutableAmount"/>
+																	<xsl:value-of select="format-number(InvoiceTotals/TotalExecutableAmount,'#.##0,00######')"/>
 																</font>
 															</td>
 														</tr>
@@ -4549,7 +4553,7 @@
 								<xsl:value-of select="substring(InstallmentDueDate,9,2)"/>-<xsl:value-of select="substring(InstallmentDueDate,6,2)"/>-<xsl:value-of select="substring(InstallmentDueDate,1,4)"/>
 							</td>
 							<td width="6%" valign="top" align="right">
-								<xsl:value-of select="InstallmentAmount"/>								
+								<xsl:value-of select="format-number(InstallmentAmount,'#.##0,00')"/>								
 							</td>
 							<td width="10%" valign="top"  align="center">
 								<script>
@@ -4816,7 +4820,7 @@
 			<td width="100%">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%">
 					<tr>
-						<td colspan="2">
+						<td>
 							<font class="titulo2">DATOS ADICIONALES</font>
 						</td>
 						<td align="right">			
@@ -4839,10 +4843,16 @@
 					</xsl:if>
 					<xsl:if test='InvoiceAdditionalInformation!=""'>
 						<tr>
-							<td width="50%" colspan="2">
-								<font class="titulopeque">OBSERVACIONES:</font>
-								   
-								<xsl:apply-templates select="InvoiceAdditionalInformation"/>							
+							<td>
+								<table>
+									<tr>
+										<td width="50%" colspan="2" >
+											<font class="titulopeque">OBSERVACIONES:</font>
+											   
+											<xsl:apply-templates select="InvoiceAdditionalInformation"/>							
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 					</xsl:if>					
@@ -5008,7 +5018,7 @@
 												</td>
 												<td align="center" width="33%">
 													<font class="titulopeque">CANTIDAD</font>
-													<br/><xsl:value-of select="Quantity"/>
+													<br/><xsl:value-of select="format-number(Quantity,'#.##0,00')"/>
 												</td>
 												<td align="center" width="33%">																		
 													<font class="titulopeque">UNIDAD DE MEDIDA</font>
@@ -5304,7 +5314,7 @@
 											<tr>
 												<td align="right">
 													<font class="titulopeque">
-														<xsl:value-of select="UnitPriceWithoutTax"/>
+														<xsl:value-of select="format-number(UnitPriceWithoutTax,'#.##0,00######')"/>
 													</font>
 												</td>
 											</tr>
@@ -5329,7 +5339,7 @@
 											<tr>
 												<td align="right">
 													<font class="titulopeque">
-														<xsl:value-of select="TotalCost"/>
+														<xsl:value-of select="format-number(TotalCost,'#.##0,00######')"/>
 													</font>
 												</td>
 											</tr>
@@ -5377,7 +5387,7 @@
 													<td width="100%" align="center">
 														<xsl:choose>
 															<xsl:when test='DiscountRate!=""' >
-																<xsl:value-of select="DiscountRate"/>
+																<xsl:value-of select="format-number(DiscountRate,'#.##0,00######')"/>
 															</xsl:when>
 															<xsl:otherwise>
 																-
@@ -5393,7 +5403,7 @@
 											<xsl:for-each select="DiscountsAndRebates/Discount">
 												<tr>
 													<td align="right">
-														<xsl:value-of select="DiscountAmount"/>
+														<xsl:value-of select="format-number(DiscountAmount,'#.##0,00######')"/>
 													</td>
 												</tr>
 											</xsl:for-each>
@@ -5442,7 +5452,7 @@
 													<td width="100%" align="center">
 														<xsl:choose>
 															<xsl:when test='ChargeRate!=""' >
-																<xsl:value-of select="ChargeRate"/>
+																<xsl:value-of select="format-number(ChargeRate,'#.##0,00######')"/>
 															</xsl:when>
 															<xsl:otherwise>
 																-
@@ -5458,7 +5468,7 @@
 											<xsl:for-each select="Charges/Charge">
 												<tr>
 													<td align="right">
-														<xsl:value-of select="ChargeAmount"/>
+														<xsl:value-of select="format-number(ChargeAmount,'#.##0,00######')"/>
 													</td>
 												</tr>
 											</xsl:for-each>
@@ -5484,7 +5494,7 @@
 											<tr>
 												<td align="right">
 													<font class="titulopeque">
-														<xsl:value-of select="GrossAmount"/>
+														<xsl:value-of select="format-number(GrossAmount,'#.##0,00######')"/>
 													</font>
 												</td>
 											</tr>
@@ -5557,7 +5567,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='TaxRate!=""' >
-																		<xsl:value-of select="TaxRate"/>
+																		<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5575,10 +5585,10 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxableBase!=""' >
-																		<xsl:value-of select="SpecialTaxableBase/TotalAmount"/>
+																		<xsl:value-of select="format-number(SpecialTaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>																				
 																	<xsl:otherwise>
-																		<xsl:value-of select="TaxableBase/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:otherwise>
 																</xsl:choose>																		
 															</td>
@@ -5593,10 +5603,10 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxAmount!=""' >
-																		<xsl:value-of select="SpecialTaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(SpecialTaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:when test='TaxAmount!=""' >
-																		<xsl:value-of select="TaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5614,7 +5624,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='EquivalenceSurcharge!=""' >
-																		<xsl:value-of select="EquivalenceSurcharge"/>
+																		<xsl:value-of select="format-number(EquivalenceSurcharge,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5632,7 +5642,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='EquivalenceSurchargeAmount!=""' >
-																		<xsl:value-of select="EquivalenceSurchargeAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(EquivalenceSurchargeAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5721,7 +5731,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='TaxRate!=""' >
-																		<xsl:value-of select="TaxRate"/>
+																		<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5739,10 +5749,10 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxableBase!=""' >
-																		<xsl:value-of select="SpecialTaxableBase/TotalAmount"/>
+																		<xsl:value-of select="format-number(SpecialTaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>																				
 																	<xsl:otherwise>
-																		<xsl:value-of select="TaxableBase/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:otherwise>
 																</xsl:choose>
 															</td>
@@ -5757,10 +5767,10 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxableBase!=""' >
-																		<xsl:value-of select="SpecialTaxableBase/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(SpecialTaxableBase/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>																				
 																	<xsl:otherwise>
-																		<xsl:value-of select="TaxableBase/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(TaxableBase/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:otherwise>
 																</xsl:choose>
 															</td>
@@ -5775,10 +5785,10 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxAmount!=""' >
-																		<xsl:value-of select="SpecialTaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(SpecialTaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:when test='TaxAmount!=""' >
-																		<xsl:value-of select="TaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>						
 																	<xsl:otherwise>
 																		-
@@ -5796,10 +5806,10 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='SpecialTaxAmount!=""' >
-																		<xsl:value-of select="SpecialTaxAmount/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(SpecialTaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:when test='TaxAmount!=""' >
-																		<xsl:value-of select="TaxAmount/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(TaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5817,7 +5827,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='EquivalenceSurcharge!=""' >
-																		<xsl:value-of select="EquivalenceSurcharge"/>
+																		<xsl:value-of select="format-number(EquivalenceSurcharge,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5835,7 +5845,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='EquivalenceSurchargeAmount/TotalAmount!=""' >
-																		<xsl:value-of select="EquivalenceSurchargeAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(EquivalenceSurchargeAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5853,7 +5863,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='EquivalenceSurchargeAmount/EquivalentInEuros!=""' >
-																		<xsl:value-of select="EquivalenceSurchargeAmount/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(EquivalenceSurchargeAmount/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5916,7 +5926,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='TaxRate!=""' >
-																		<xsl:value-of  select="TaxRate"/>
+																		<xsl:value-of  select="format-number(TaxRate,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5934,7 +5944,7 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxableBase!=""' >
-																		<xsl:value-of  select="TaxableBase/TotalAmount"/>
+																		<xsl:value-of  select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -5952,7 +5962,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxAmount!=""' >
-																		<xsl:value-of select="TaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -6017,7 +6027,7 @@
 															<td width="100%" align="center">
 																<xsl:choose>
 																	<xsl:when test='TaxRate!=""' >
-																		<xsl:value-of select="TaxRate"/>
+																		<xsl:value-of select="format-number(TaxRate,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -6035,7 +6045,7 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxableBase/TotalAmount!=""' >
-																		<xsl:value-of select="TaxableBase/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxableBase/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -6053,7 +6063,7 @@
 															<td width="100%" align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxableBase/EquivalentInEuros!=""' >
-																		<xsl:value-of select="TaxableBase/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(TaxableBase/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -6071,7 +6081,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxAmount/TotalAmount!=""' >
-																		<xsl:value-of select="TaxAmount/TotalAmount"/>
+																		<xsl:value-of select="format-number(TaxAmount/TotalAmount,'#.##0,00######')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
@@ -6089,7 +6099,7 @@
 															<td align="right">
 																<xsl:choose>
 																	<xsl:when test='TaxAmount/EquivalentInEuros!=""' >
-																		<xsl:value-of select="TaxAmount/EquivalentInEuros"/>
+																		<xsl:value-of select="format-number(TaxAmount/EquivalentInEuros,'#.##0,00')"/>
 																	</xsl:when>
 																	<xsl:otherwise>
 																		-
