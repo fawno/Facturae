@@ -33,6 +33,7 @@ jobs:
     - name: Install dependencies
       uses: php-actions/composer@v6
       with:
+        php_extensions: dom openssl simplexml soap xsl
         args: --prefer-dist --no-progress
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
@@ -41,4 +42,4 @@ jobs:
     - name: Run test suite
       uses: php-actions/phpunit@v4
       with:
-        php_extensions: gd
+        php_extensions: dom openssl simplexml soap xsl

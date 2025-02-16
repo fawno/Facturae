@@ -14,6 +14,11 @@
   },
   "require": {
     "php": ">=8.0.0",
+    "ext-dom": "*",
+    "ext-openssl": "*",
+    "ext-simplexml": "*",
+    "ext-soap": "*",
+    "ext-xsl": "*",
     "robrichards/xmlseclibs": "^3.1",
     "robrichards/wse-php": "^2.0",
     "globalcitizen/php-iban": "^4.2",
