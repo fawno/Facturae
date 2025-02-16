@@ -26,7 +26,7 @@
       return function_exists('random_int') ? random_int(0x10000000, 0x7FFFFFFF) : rand(100000, 999999);
     }
 
-    public static function getSignatureIds () : object {
+    private static function getSignatureIds () : object {
       return new class {
         public string $signatureId;
         public string $signedInfoId;
