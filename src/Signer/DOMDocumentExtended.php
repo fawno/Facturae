@@ -45,6 +45,10 @@
       return $dom->loadXML($facturae->asXML()) ? $dom : null;
     }
 
+    public function asBase64 () : string {
+      return base64_encode($this->saveXML());
+    }
+
     public function asDom () : DOMDocumentExtended {
       return clone $this;
     }
@@ -94,6 +98,11 @@
       $ElectronicMail->nodeValue = 'distribucion@deia.eus';
 
       return $this;
+    }
+
+    public function getInvoiceNumber () : string {
+      $InvoiceNumber = $this->getElementsByTagName('InvoiceNumber');
+      return $InvoiceNumber->length ? $InvoiceNumber->item(0)->nodeValue : '';
     }
 
     public function getDocumentAttributes () : array {

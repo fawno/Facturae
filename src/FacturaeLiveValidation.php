@@ -15,6 +15,7 @@
   use Fawno\Facturae\Error\LiveValidationErrors;
   use Fawno\Facturae\Exception\LiveValidationException;
   use Fawno\Facturae\LiveValidation\LiveValidationInvoice;
+  use Fawno\Facturae\Signer\DOMDocumentExtended;
 
   class FacturaeLiveValidation {
     public const VALIDATOR = 'https://se-proveedores-face.redsara.es/api/v1/invoice-validation';
@@ -52,7 +53,7 @@
       return new self($result);
     }
 
-    public static function validate (Facturae $facturae, bool $validateSignature = true, bool $validateAdministrativeCentres = false, bool $validateDuplicity = false) : FacturaeLiveValidation {
+    public static function validate (Facturae|DOMDocumentExtended $facturae, bool $validateSignature = true, bool $validateAdministrativeCentres = false, bool $validateDuplicity = false) : FacturaeLiveValidation {
       $data = json_encode([
         'filename' => $facturae->getInvoiceNumber(),
         'content' => $facturae->asBase64(),
