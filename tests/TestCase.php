@@ -12,4 +12,8 @@
     public const PKCS_PASS_2 = '1234';
     public const INVOICE_SIGNED   = __DIR__ . '/Invoices/factura-prueba-v1-2-0.xsig';
     public const INVOICE_UNSIGNED = __DIR__ . '/Invoices/factura-prueba-v1-2-0.xml';
+
+    public function out (string $message) : void {
+      fwrite(STDOUT, $message . PHP_EOL);
+    }
 	}

@@ -13,14 +13,15 @@
   namespace Fawno\Facturae;
 
   use Fawno\Facturae\FACe2;
+  use Fawno\Facturae\Signer\CertificateStore;
 
   class wsdlFACeDFB extends FACe2 {
     public const WSDL_DEV  = 'http://80.245.0.101/CGS2/FacturaSSPPWebServiceProxyPort?WSDL';
     public const WSDL      = 'http://apps.bizkaia.net/CGS2/FacturaSSPPWebServiceProxyPort?WSDL';
 
-    public function __construct (?string $pkcs12_file = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
+    public function __construct (?CertificateStore $certificateStore = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
 
-      return parent::__construct($pkcs12_file, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
+      return parent::__construct($certificateStore, $options, $devel, $ssl_verifypeer);
     }
   }

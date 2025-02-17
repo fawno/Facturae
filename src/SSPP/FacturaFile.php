@@ -12,27 +12,19 @@
 
   namespace Fawno\Facturae\SSPP;
 
+  use Fawno\Facturae\Facturae;
   use SoapVar;
 
   class FacturaFile {
-    public static function create (string $filename, ?string $mimetype = null) : SoapVar {
-      if (empty($mimetype) and function_exists('mime_content_type')) {
-        $mimetype = mime_content_type($filename);
-      }
-
-      // PHP 7.2.x identifies xml files as "text/xml" instead of "application/xml"
-      if ($mimetype == 'text/xml') {
-        $mimetype = 'application/xml';
-      }
-
-      $file = base64_encode(file_get_contents($filename));
+    public static function create (Facturae $facturae) : SoapVar {
+      $file = $facturae->asBase64();
       // Remove BOM in BASE64 encoding for FACeGV
       $file = preg_replace('~^77u/~', '', $file);
 
       $SSPPFicheroFactura = [
         'factura' => $file,
-        'nombre' => basename($filename),
-        'mime' => $mimetype,
+        'nombre' => $facturae->getInvoiceNumber(),
+        'mime' => 'application/xml',
       ];
 
       return new SoapVar((object) $SSPPFicheroFactura, SOAP_ENC_OBJECT, 'FacturaFile', 'https://webservice.face.gob.es');

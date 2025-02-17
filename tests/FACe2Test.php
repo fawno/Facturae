@@ -12,19 +12,15 @@
   use Fawno\Facturae\Tests\TestCase;
 
 	class FACe2Test extends TestCase {
-    public function testLoadPKCS12 () {
-      $certStore = CertificateStore::loadPKCS12(self::PKCS_FILE_1, self::PKCS_PASS_1);
+    public function testEnviarFactura () {
+      $certificateStore = CertificateStore::loadPKCS12(self::PKCS_FILE_1, self::PKCS_PASS_1);
 
       $unsigned = Facturae::loadFile(self::INVOICE_UNSIGNED);
       $unsigned->setInvoiceSeries('FAWNO');
-      $unsigned->setInvoiceNumber(date('YmdHis'));
-      $signed = FacturaeSigner::sign($unsigned, $certStore);
-      //$validation = FacturaeLiveValidation::validate($signed);
+      $unsigned->setInvoiceNumber('FAWNO/' . date('YmdHis'));
+      $signed = FacturaeSigner::sign($unsigned, $certificateStore);
 
-      $invoice_file = tempnam(__DIR__, '_fe');
-      $signed->saveXML($invoice_file);
-
-      $wsdlFACe = FACe::create(FACe2::class, null, null, [
+      $wsdlFACe = FACe::create(FACe2::class, null, [
         'location' => FACe2::WSDL_DEV,
         'trace' => true,
         //'keep_alive' => true,
@@ -32,12 +28,33 @@
         'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
       ], true, false);
 
-      $wsdlFACe->set_pkcs12(self::PKCS_FILE_1, self::PKCS_PASS_1);
-      $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $invoice_file, []);
+      $wsdlFACe->setCertificateStore($certificateStore);
+
+      $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $signed, []);
       $response = $wsdlFACe->enviarFactura($invoiceWS);
 
-      unlink($invoice_file);
-
       $this->assertEquals(0, $response->resultado->codigo, print_r($response, true));
+    }
+
+    public function testEnviarFacturaRepetida () {
+      $certificateStore = CertificateStore::loadPKCS12(self::PKCS_FILE_1, self::PKCS_PASS_1);
+
+      $unsigned = Facturae::loadFile(self::INVOICE_UNSIGNED);
+      $signed = FacturaeSigner::sign($unsigned, $certificateStore);
+
+      $wsdlFACe = FACe::create(FACe2::class, null, [
+        'location' => FACe2::WSDL_DEV,
+        'trace' => true,
+        //'keep_alive' => true,
+        //'connection_timeout' => 5000,
+        'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+      ], true, false);
+
+      $wsdlFACe->setCertificateStore($certificateStore);
+
+      $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $signed, []);
+      $response = $wsdlFACe->enviarFactura($invoiceWS);
+
+      $this->assertEquals(415, $response->resultado->codigo, print_r($response, true));
     }
   }

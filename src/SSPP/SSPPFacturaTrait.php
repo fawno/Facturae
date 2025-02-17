@@ -12,10 +12,11 @@
 
   namespace Fawno\Facturae\SSPP;
 
+  use Fawno\Facturae\Facturae;
   use SoapVar;
 
   trait SSPPFacturaTrait {
-    public static function create (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
+    public static function create (string $correo, Facturae $fichero_factura, array $anexos = []) : SoapVar {
       $SSPPFactura = new self($correo, $fichero_factura, $anexos);
 
       return new SoapVar($SSPPFactura, SOAP_ENC_OBJECT, 'EnviarFacturaRequest', 'https://webservice.face.gob.es');
