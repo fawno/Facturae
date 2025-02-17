@@ -111,28 +111,40 @@
       return (string) $this->Invoices->Invoice->InvoiceHeader->InvoiceNumber;
     }
 
+    public function setInvoiceNumber (string $invoiceNumber) : Facturae {
+      $this->Invoices->Invoice->InvoiceHeader->InvoiceNumber = $invoiceNumber;
+
+      return $this;
+    }
+
     public function getInvoiceSeries () : string {
       return (string) $this->Invoices->Invoice->InvoiceHeader->InvoiceSeriesCode;
+    }
+
+    public function setInvoiceSeries (string $invoiceSeriesCode) : Facturae {
+      $this->Invoices->Invoice->InvoiceHeader->InvoiceSeriesCode = $invoiceSeriesCode;
+
+      return $this;
     }
 
     public function getSellerEmail () : string {
       return (string) $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail;
     }
 
-    public function setSellerEmail (string $email) : string {
+    public function setSellerEmail (string $email) : Facturae {
       $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail = $email;
 
-      return (string) $this->Parties->SellerParty->LegalEntity->ContactDetails->ElectronicMail;
+      return $this;
     }
 
     public function getBuyerEmail () : string {
       return (string) $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail;
     }
 
-    public function setBuyerEmail (string $email) : string {
+    public function setBuyerEmail (string $email) : Facturae {
       $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail = $email;
 
-      return (string) $this->Parties->BuyerParty->LegalEntity->ContactDetails->ElectronicMail;
+      return $this;
     }
 
     public function getSellerTIN () : string {
