@@ -17,12 +17,9 @@
 
       $unsigned = Facturae::loadFile(self::INVOICE_UNSIGNED);
       $unsigned->setInvoiceSeries('FAWNO');
-      $unsigned->setInvoiceNumber(date('YmdHis'));
+      $unsigned->setInvoiceNumber('FAWNO/' . date('YmdHis'));
       $signed = FacturaeSigner::sign($unsigned, $certStore);
       //$validation = FacturaeLiveValidation::validate($signed);
-
-      $invoice_file = tempnam(__DIR__, '_fe');
-      $signed->saveXML($invoice_file);
 
       $wsdlFACe = FACe::create(FACe2::class, null, [
         'location' => FACe2::WSDL_DEV,
@@ -33,10 +30,8 @@
       ], true, false);
 
       $wsdlFACe->setCertificateStore($certStore);
-      $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $invoice_file, []);
+      $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $signed, []);
       $response = $wsdlFACe->enviarFactura($invoiceWS);
-
-      unlink($invoice_file);
 
       $this->assertEquals(0, $response->resultado->codigo, print_r($response, true));
     }

@@ -12,6 +12,7 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\Facturae;
   use Fawno\Facturae\Signer\CertificateStore;
   use Fawno\Facturae\Signer\DOMDocumentExtended;
   use Fawno\Facturae\SSPP\SSPPFactura;
@@ -92,7 +93,7 @@
       return $objWSSE->saveXML();
     }
 
-    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
+    public static function SSPPFactura (string $correo, Facturae $fichero_factura, array $anexos = []) : SoapVar {
       return SSPPFactura::create($correo, $fichero_factura, $anexos);
     }
   }

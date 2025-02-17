@@ -12,6 +12,7 @@
 
   namespace Fawno\Facturae\SSPP;
 
+  use Fawno\Facturae\Facturae;
   use Fawno\Facturae\SSPP\FacturaFile;
   use Fawno\Facturae\SSPP\ArrayOfAnexoFile;
   use Fawno\Facturae\SSPP\SSPPFacturaTrait;
@@ -24,7 +25,7 @@
     public SoapVar $factura;
     public SoapVar $anexos;
 
-    public function __construct (string $correo, string $fichero_factura, array $anexos = []) {
+    public function __construct (string $correo, Facturae $fichero_factura, array $anexos = []) {
       $this->correo = $correo;
       $this->factura = FacturaFile::create($fichero_factura);
       $this->anexos = ArrayOfAnexoFile::create($anexos);

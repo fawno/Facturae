@@ -12,12 +12,13 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\Facturae;
   use Fawno\Facturae\FACe;
   use Fawno\Facturae\SSPP\SSPPFactura2;
   use SoapVar;
 
   class FACe2 extends FACe {
-    public static function SSPPFactura (string $correo, string $fichero_factura, array $anexos = []) : SoapVar {
+    public static function SSPPFactura (string $correo, Facturae $fichero_factura, array $anexos = []) : SoapVar {
       return SSPPFactura2::create($correo, $fichero_factura, $anexos);
     }
   }
