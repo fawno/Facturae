@@ -16,14 +16,15 @@
   use SoapVar;
 
   class FacturaFile {
-    public static function create (Facturae $facturae, string $mimetype = 'text/xml') : SoapVar {
+    public static function create (Facturae $facturae, string $mimetype = 'application/xml') : SoapVar {
       $file = $facturae->asBase64();
       // Remove BOM in BASE64 encoding for FACeGV
       $file = preg_replace('~^77u/~', '', $file);
 
       $SSPPFicheroFactura = [
         'factura' => $file,
-        'nombre' => $facturae->getInvoiceNumber(),
+        'nombre' => str_replace('/', '-', $facturae->getInvoiceNumber()) . '.xml',
+        //'mime' => 'text/xml',
         //'mime' => 'application/xml',
         'mime' => $mimetype,
       ];
