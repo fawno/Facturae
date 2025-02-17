@@ -42,7 +42,7 @@
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
       }
 
-      $this->certificateStore = $certificateStore;
+      $this->setCertificateStore($certificateStore);
 
       parent::__construct($wsdl, $options);
     }

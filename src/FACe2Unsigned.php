@@ -19,10 +19,10 @@
     public function __construct (?CertificateStore $certificateStore = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['wsdl'] = $options['wsdl'] ?? self::WSDL;
 
-      parent::__construct($certificateStore, $options, $devel, $ssl_verifypeer);
+      parent::__construct(null, $options, $devel, $ssl_verifypeer);
     }
 
-    public function signRequest (string $request) : string {
-      return $request;
+    public function setCertificateStore (?CertificateStore $certificateStore) : static {
+      return $this;
     }
   }
