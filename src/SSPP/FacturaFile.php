@@ -16,7 +16,7 @@
   use SoapVar;
 
   class FacturaFile {
-    public static function create (Facturae $facturae) : SoapVar {
+    public static function create (Facturae $facturae, string $mimetype = 'text/xml') : SoapVar {
       $file = $facturae->asBase64();
       // Remove BOM in BASE64 encoding for FACeGV
       $file = preg_replace('~^77u/~', '', $file);
@@ -25,7 +25,7 @@
         'factura' => $file,
         'nombre' => $facturae->getInvoiceNumber(),
         //'mime' => 'application/xml',
-        'mime' => 'text/xml',
+        'mime' => $mimetype,
       ];
 
       return new SoapVar((object) $SSPPFicheroFactura, SOAP_ENC_OBJECT, 'FacturaFile', 'https://webservice.face.gob.es');
