@@ -24,7 +24,8 @@
       $SSPPFicheroFactura = [
         'factura' => $file,
         'nombre' => $facturae->getInvoiceNumber(),
-        'mime' => 'application/xml',
+        //'mime' => 'application/xml',
+        'mime' => 'text/xml',
       ];
 
       return new SoapVar((object) $SSPPFicheroFactura, SOAP_ENC_OBJECT, 'FacturaFile', 'https://webservice.face.gob.es');
