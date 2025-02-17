@@ -24,7 +24,7 @@
       $invoice_file = tempnam(__DIR__, '_fe');
       $signed->saveXML($invoice_file);
 
-      $wsdlFACe = FACe::create(FACe2::class, null, null, [
+      $wsdlFACe = FACe::create(FACe2::class, null, [
         'location' => FACe2::WSDL_DEV,
         'trace' => true,
         //'keep_alive' => true,
@@ -32,7 +32,7 @@
         'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
       ], true, false);
 
-      $wsdlFACe->set_pkcs12(self::PKCS_FILE_1, self::PKCS_PASS_1);
+      $wsdlFACe->setCertificateStore($certStore);
       $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $invoice_file, []);
       $response = $wsdlFACe->enviarFactura($invoiceWS);
 

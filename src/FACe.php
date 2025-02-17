@@ -12,7 +12,8 @@
 
   namespace Fawno\Facturae;
 
-  use DOMDocument;
+  use Fawno\Facturae\Signer\CertificateStore;
+  use Fawno\Facturae\Signer\DOMDocumentExtended;
   use Fawno\Facturae\SSPP\SSPPFactura;
   use SoapClient;
   use SoapVar;
@@ -24,14 +25,13 @@
     public const WSDL     = 'https://webservice.face.gob.es/facturasspp?wsdl';
 
     protected string $endpoint = self::WSDL;
-    protected $private_key = null;
-    protected $public_key = null;
+    protected ?CertificateStore $certificateStore = null;
 
-    public static function create (string $wsClassName, ?string $pkcs12 = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) : FACe {
-      return new $wsClassName($pkcs12, $pkcs12_pass, $options, $devel, $ssl_verifypeer);
+    public static function create (string $wsClassName, ?CertificateStore $certificateStore = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) : FACe {
+      return new $wsClassName($certificateStore, $options, $devel, $ssl_verifypeer);
     }
 
-    public function __construct (?string $pkcs12 = null, ?string $pkcs12_pass = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
+    public function __construct (?CertificateStore $certificateStore = null, array $options = [], bool $devel = false, bool $ssl_verifypeer = true) {
       $options['location'] = $options['location'] ?? ($devel ? self::WSDL_DEV : self::WSDL);
       $this->endpoint = $options['location'];
 
@@ -41,9 +41,7 @@
         $options['stream_context'] = $this->stream_context($ssl_verifypeer);
       }
 
-      if ($pkcs12 and $pkcs12_pass) {
-        $this->set_pkcs12($pkcs12, $pkcs12_pass);
-      }
+      $this->certificateStore = $certificateStore;
 
       parent::__construct($wsdl, $options);
     }
@@ -70,55 +68,24 @@
       return parent::__doRequest($request_signed, $location, $action, $version, $oneWay);
     }
 
-    public function set_pkcs12 (string $pkcs12, string $pkcs12_pass) : bool {
-      if (empty($pkcs12_pass)) {
-        return false;
-      }
+    public function setCertificateStore (?CertificateStore $certificateStore) : static {
+      $this->certificateStore = $certificateStore;
 
-      if (is_file($pkcs12)) {
-        $pkcs12 = file_get_contents($pkcs12);
-      }
-
-      if (!openssl_pkcs12_read($pkcs12, $certs, $pkcs12_pass)) {
-        return false;
-      }
-
-      $this->private_key = $certs['pkey'];
-      $this->public_key = $certs['cert'];
-      return true;
-    }
-
-    public function set_private_key (string $private_key, ?string $passphrase = null) : bool {
-      $pkey = openssl_pkey_get_private($private_key, $passphrase);
-      if ($pkey === false) {
-        return false;
-      }
-
-      return openssl_pkey_export($pkey, $this->private_key);
-    }
-
-    public function set_public_key (string $public_key) {
-      if (openssl_pkey_get_public($public_key) === false) {
-        return false;
-      }
-
-      $this->public_key = $public_key;
-      return true;
+      return $this;
     }
 
     public function signRequest (string $request) : string {
-      if (empty($this->public_key) and empty($this->private_key)) {
+      if (is_null($this->certificateStore)) {
         return $request;
       }
 
-      $doc = new DOMDocument('1.0');
-      $doc->loadXML($request);
+      $doc = DOMDocumentExtended::loadStringXML($request);
 
       $objWSSE = new WSSESoap($doc);
-      $token = $objWSSE->addBinaryToken($this->public_key);
+      $token = $objWSSE->addBinaryToken($this->certificateStore->getPemCertificate());
       $objWSSE->addTimestamp();
       $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
-      $objKey->loadKey($this->private_key);
+      $objKey->loadKey($this->certificateStore->getPemPrivateKey());
       $objWSSE->signSoapDoc($objKey, ['insertBefore' => false]);
       $objWSSE->attachTokentoSig($token);
 
