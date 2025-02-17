@@ -72,8 +72,16 @@
       ]);
       $result = curl_exec($curl);
 
-      if (200 == curl_getinfo($curl, CURLINFO_HTTP_CODE)) {
+      $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      if (200 == $http_code) {
         return new self($result);
+      }
+
+      if (500 <= $http_code) {
+        $code = $http_code;
+        $error = curl_errno($curl);
+        $message = curl_error($curl) . $result;
+        throw new LiveValidationException(sprintf('%s %s', $error, $message), $code);
       }
 
       if (false === $result) {
@@ -83,6 +91,7 @@
         throw new LiveValidationException(sprintf('%s %s %s', $code, $error, $message));
       }
 
+      throw new LiveValidationException($result);
       $result = json_decode($result, true);
       throw new LiveValidationException(sprintf('%s: %s', $result['message'] ?? '', $result['content'] ?? ''), $result['code'] ?? 0);
     }
