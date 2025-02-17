@@ -155,6 +155,12 @@
       return (string) $this->Parties->BuyerParty->TaxIdentification->TaxIdentificationNumber;
     }
 
+    public function setBuyerTIN (string $tin) : Facturae {
+      $this->Parties->BuyerParty->TaxIdentification->TaxIdentificationNumber = $tin;
+
+      return $this;
+    }
+
     public function getIssueDate () : DateTimeImmutable {
       $date = (string) $this->Invoices->Invoice->InvoiceIssueData->IssueDate ?? '';
       return new DateTimeImmutable($date);
