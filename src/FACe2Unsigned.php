@@ -21,4 +21,8 @@
 
       parent::__construct($certificateStore, $options, $devel, $ssl_verifypeer);
     }
+
+    public function signRequest (string $request) : string {
+      return $request;
+    }
   }
