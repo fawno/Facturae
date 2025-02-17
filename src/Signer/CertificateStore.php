@@ -210,6 +210,12 @@
       return $this->privateKey;
     }
 
+    public function getPemPrivateKey () : string {
+      openssl_pkey_export($this->privateKey, $pkey);
+
+      return $pkey;
+    }
+
     public function getPrivateData () : array|false {
       return openssl_pkey_get_details($this->privateKey);
     }
