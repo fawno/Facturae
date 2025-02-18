@@ -95,6 +95,10 @@
       }
     }
 
+    public static function validate (Facturae $facturae) : FacturaeSignature {
+      return new self($facturae);
+    }
+
     public function isValid () : bool {
       return is_null($this->error);
     }
