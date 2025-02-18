@@ -13,6 +13,17 @@
     public const INVOICE_SIGNED   = __DIR__ . '/Invoices/factura-prueba-v1-2-0.xsig';
     public const INVOICE_UNSIGNED = __DIR__ . '/Invoices/factura-prueba-v1-2-0.xml';
 
+    /**
+     * Factura de ejemplo para la DFB
+     * https://apli.bizkaia.eus/apps/danok/cgfw/datos/factura_ejemplo.xml
+     */
+    public const INVOICE_SAMPLE1   = __DIR__ . '/Invoices/factura_ejemplo.xml';
+
+    /**
+     * Factura de ejemplo para el Consorcio de aguas de Bilbao
+     */
+    public const INVOICE_SAMPLE2   = __DIR__ . '/Invoices/factura_consorciodeaguas.xml';
+
     public function out (string $message) : void {
       fwrite(STDOUT, $message . PHP_EOL);
     }
