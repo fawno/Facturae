@@ -167,8 +167,8 @@
     }
 
     public function getIBAN () : ?string {
-			$invoice_iban1 = (string) $this->Invoices->Invoice->PaymentDetails->Installment->AccountToBeCredited->IBAN;
-			$invoice_iban2 = (string) $this->Invoices->Invoice->PaymentDetails->Installment->AccountToBeDebited->IBAN;
+			$invoice_iban1 = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->AccountToBeCredited?->IBAN ?? '';
+			$invoice_iban2 = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->AccountToBeDebited?->IBAN ?? '';
 			$invoice_iban = !empty($invoice_iban1) ? $invoice_iban1 : $invoice_iban2;
 
       return (!empty($invoice_iban) ? $invoice_iban : null);
