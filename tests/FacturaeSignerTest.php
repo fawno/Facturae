@@ -18,9 +18,9 @@
       $unsigned = Facturae::loadFile(self::INVOICE_UNSIGNED);
 
       $signed = FacturaeSigner::sign($unsigned, $certStore);
-      //$validation = FacturaeLiveValidation::validate($signed);
+      $validation = FacturaeLiveValidation::validate($signed);
       //$validation = FacturaeValidation::validate($signed);
-      $validation = FacturaeSignature::validate($signed);
+      //$validation = FacturaeSignature::validate($signed);
 
       $this->assertInstanceOf(Facturae::class, $signed);
       $this->assertTrue($signed->isSigned(), 'La factura no está firmada');
