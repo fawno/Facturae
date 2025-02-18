@@ -51,7 +51,7 @@
       }
 
       $iban = $facturae->getIBAN();
-      if (!verify_iban($iban)) {
+      if (is_null($iban) or !verify_iban($iban)) {
         $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
       }
 
