@@ -5,7 +5,9 @@
 
   use Fawno\Facturae\Facturae;
   use Fawno\Facturae\FacturaeLiveValidation;
+  use Fawno\Facturae\FacturaeSignature;
   use Fawno\Facturae\FacturaeSigner;
+  use Fawno\Facturae\FacturaeValidation;
   use Fawno\Facturae\Signer\CertificateStore;
   use Fawno\Facturae\Tests\TestCase;
 
@@ -16,10 +18,12 @@
       $unsigned = Facturae::loadFile(self::INVOICE_UNSIGNED);
 
       $signed = FacturaeSigner::sign($unsigned, $certStore);
-      $validation = FacturaeLiveValidation::validate($signed);
+      //$validation = FacturaeLiveValidation::validate($signed);
+      //$validation = FacturaeValidation::validate($signed);
+      $validation = FacturaeSignature::validate($signed);
 
       $this->assertInstanceOf(Facturae::class, $signed);
-      $this->assertTrue($signed->isSigned());
-      $this->assertTrue($validation->isValid());
+      $this->assertTrue($signed->isSigned(), 'La factura no está firmada');
+      $this->assertTrue($validation->isValid(), 'Error en la validación');
     }
   }
