@@ -94,7 +94,7 @@
       $version = $this->getSchemaVersion();
       $xsltfile = self::XSLT_FILES[$version] ?? null;
 
-      if (!is_file($xsltfile)) {
+      if (is_null($xsltfile) or !is_file($xsltfile)) {
         return $this;
       }
 
