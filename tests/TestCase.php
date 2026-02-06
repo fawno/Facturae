@@ -44,6 +44,11 @@
      */
     public const INVOICE_SAMPLE2   = __DIR__ . '/Invoices/factura_consorciodeaguas.xml';
 
+    /**
+     * Factura de ejemplo para la Diputación Foral de Bizkaia
+     */
+    public const INVOICE_SAMPLE3   = __DIR__ . '/Invoices/factura_dfb.xml';
+
     public function out (string $message) : void {
       fwrite(STDOUT, $message . PHP_EOL);
     }
