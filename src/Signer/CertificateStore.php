@@ -43,6 +43,18 @@
       'UNDEF'                  => 'OID.2.5.4.97',
     ];
 
+    public const ALLOWED_SUBJECT_OID = [
+      'CN'                     => 'CN',
+      'O'                      => 'O',
+      'C'                      => 'C',
+
+      'organizationIdentifier' => 'OID.2.5.4.97',
+      'SN'                     => 'OID.2.5.4.4',
+      'GN'                     => 'OID.2.5.4.42',
+      'serialNumber'           => 'OID.2.5.4.5',
+      'description'            => 'OID.2.5.4.13',
+    ];
+
     private OpenSSLCertificate|false $certificate = false;
     private string|false $pemCertificate = false;
     private array|false $publicData = false;
@@ -204,6 +216,18 @@
 
     public function getDistinguishedName () : string {
       return self::getCertDistinguishedName($this->publicData['issuer']);
+    }
+
+    public function getSubjectName () : string {
+      $name = [];
+
+      foreach (self::ALLOWED_SUBJECT_OID as $key => $key_name) {
+        if ($value = ($this->publicData['subject'][$key] ?? null)) {
+          $name[] = $key_name . '=' . $value;
+        }
+      }
+
+      return implode(', ', $name);
     }
 
     public function getPrivateKey () : OpenSSLAsymmetricKey {
