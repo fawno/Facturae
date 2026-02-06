@@ -71,6 +71,7 @@
       $xadesCert = $xadesSigningCertificate->appendChild($unsigned->createElement('xades:Cert'));
       $xadesCertDigest = $xadesCert->appendChild($unsigned->createElement('xades:CertDigest'));
       $dsDigestMethod = $xadesCertDigest->appendChild($unsigned->createElement('ds:DigestMethod'));
+      /** @var TNode $dsDigestMethod */
       $dsDigestMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmlenc#sha512');
       $dsDigestMethod->appendChild($unsigned->createTextNode(''));
       $xadesCertDigest->appendChild($unsigned->createElement('ds:DigestValue', $certificateStore->getCertificateDigest()));
@@ -84,6 +85,7 @@
       $xadesSigPolicyId->appendChild($unsigned->createElement('xades:Description', self::SIGN_POLICY_NAME));
       $xadesSigPolicyHash = $xadesSignaturePolicyId->appendChild($unsigned->createElement('xades:SigPolicyHash'));
       $dsDigestMethod = $xadesSigPolicyHash->appendChild($unsigned->createElement('ds:DigestMethod'));
+      /** @var TNode $dsDigestMethod */
       $dsDigestMethod->setAttribute('Algorithm', 'http://www.w3.org/2000/09/xmldsig#sha1');
       $dsDigestMethod->appendChild($unsigned->createTextNode(''));
       $xadesSigPolicyHash->appendChild($unsigned->createElement('ds:DigestValue', self::SIGN_POLICY_DIGEST));
@@ -92,6 +94,7 @@
       $xadesClaimedRoles->appendChild($unsigned->createElement('xades:ClaimedRole', 'emisor'));
       $xadesSignedDataObjectProperties = $xadesSignedProperties->appendChild($unsigned->createElement('xades:SignedDataObjectProperties'));
       $xadesDataObjectFormat = $xadesSignedDataObjectProperties->appendChild($unsigned->createElement('xades:DataObjectFormat'));
+      /** @var TNode $xadesDataObjectFormat */
       $xadesDataObjectFormat->setAttribute('ObjectReference', '#' . $ids->referenceId);
       $xadesDataObjectFormat->appendChild($unsigned->createElement('xades:Description', 'Factura electrónica'));
       $xadesObjectIdentifier = $xadesDataObjectFormat->appendChild($unsigned->createElement('xades:ObjectIdentifier'));
@@ -103,6 +106,10 @@
       $dsKeyInfo = $unsigned->createElement('ds:KeyInfo');
       $dsKeyInfo->setAttribute('Id', $ids->certificateId);
       $dsX509Data = $dsKeyInfo->appendChild($unsigned->createElement('ds:X509Data'));
+      $dsX509IssuerSerial = $dsX509Data->appendChild($unsigned->createElement('ds:X509IssuerSerial'));
+      $dsX509IssuerSerial->appendChild($unsigned->createElement('ds:X509IssuerName', $certificateStore->getDistinguishedName()));
+      $dsX509IssuerSerial->appendChild($unsigned->createElement('ds:X509SerialNumber', $certificateStore->getSerialNumber()));
+      $dsX509Data->appendChild($unsigned->createElement('ds:X509SubjectName', $certificateStore->getSubjectName()));
       foreach ($certificateStore->getPublicChain() as $pemCertificate) {
         $dsX509Data->appendChild($unsigned->createElement('ds:X509Certificate', CertificateStore::getCert($pemCertificate)));
       }
@@ -115,13 +122,16 @@
       $dsSignedInfo = $unsigned->createElement('ds:SignedInfo');
       $dsSignedInfo->setAttribute('Id', $ids->signedInfoId);
       $dsCanonicalizationMethod = $dsSignedInfo->appendChild($unsigned->createElement('ds:CanonicalizationMethod'));
+      /** @var TNode $dsCanonicalizationMethod */
       $dsCanonicalizationMethod->setAttribute('Algorithm', 'http://www.w3.org/TR/2001/REC-xml-c14n-20010315');
       $dsCanonicalizationMethod->appendChild($unsigned->createTextNode(''));
       $dsSignatureMethod = $dsSignedInfo->appendChild($unsigned->createElement('ds:SignatureMethod'));
+      /** @var TNode $dsSignatureMethod */
       $dsSignatureMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512');
       $dsSignatureMethod->appendChild($unsigned->createTextNode(''));
 
       $dsReference = $dsSignedInfo->appendChild($unsigned->createElement('ds:Reference'));
+      /** @var TNode $dsReference */
       $dsReference->setAttribute('Id', $ids->signedPropertiesId);
       $dsReference->setAttribute('Type', 'http://uri.etsi.org/01903#SignedProperties');
       $dsReference->setAttribute('URI', '#' . $ids->signatureSignedPropertiesId);
@@ -131,6 +141,7 @@
       $dsReference->appendChild($unsigned->createElement('ds:DigestValue', CertificateStore::getDigest($unsigned->injectNamespaces($xadesSignedProperties, $xmlns))));
 
       $dsReference = $dsSignedInfo->appendChild($unsigned->createElement('ds:Reference'));
+      /** @var TNode $dsReference */
       $dsReference->setAttribute('URI', '#' . $ids->certificateId);
       $dsDigestMethod = $dsReference->appendChild($unsigned->createElement('ds:DigestMethod'));
       $dsDigestMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmlenc#sha512');
@@ -138,6 +149,7 @@
       $dsReference->appendChild($unsigned->createElement('ds:DigestValue', CertificateStore::getDigest($unsigned->injectNamespaces($dsKeyInfo, $xmlns))));
 
       $dsReference = $dsSignedInfo->appendChild($unsigned->createElement('ds:Reference'));
+      /** @var TNode $dsReference */
       $dsReference->setAttribute('Id', $ids->referenceId);
       $dsReference->setAttribute('Type', 'http://www.w3.org/2000/09/xmldsig#Object');
       $dsReference->setAttribute('URI', '');
@@ -152,6 +164,7 @@
 
       // Build <ds:Signature /> element
       $dsSignature = $unsigned->createElement('ds:Signature');
+      /** @var TNode $dsSignature */
       $dsSignature->setAttribute('xmlns:xades', self::XMLNS_XADES);
       $dsSignature->setAttribute('Id', $ids->signatureId);
       $dsSignature->appendChild($dsSignedInfo);
