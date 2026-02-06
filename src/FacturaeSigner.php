@@ -52,7 +52,7 @@
       };
     }
 
-    public static function sign (Facturae|DOMDocumentExtended $facturae, CertificateStore $certificateStore, int|string|null $signingTime = null) : ?Facturae {
+    public static function sign (Facturae|DOMDocumentExtended $facturae, CertificateStore $certificateStore, int|string|null $signingTime = null, bool $withChain = false) : ?Facturae {
       $ids = self::getSignatureIds();
       $signingTime = empty($signingTime) ? time() : $signingTime;
       $signingTime = is_string($signingTime) ? strtotime($signingTime) : $signingTime;
@@ -110,8 +110,12 @@
       $dsX509IssuerSerial->appendChild($unsigned->createElement('ds:X509IssuerName', $certificateStore->getDistinguishedName()));
       $dsX509IssuerSerial->appendChild($unsigned->createElement('ds:X509SerialNumber', $certificateStore->getSerialNumber()));
       $dsX509Data->appendChild($unsigned->createElement('ds:X509SubjectName', $certificateStore->getSubjectName()));
-      foreach ($certificateStore->getPublicChain() as $pemCertificate) {
-        $dsX509Data->appendChild($unsigned->createElement('ds:X509Certificate', CertificateStore::getCert($pemCertificate)));
+      if ($withChain) {
+        foreach ($certificateStore->getPublicChain() as $pemCertificate) {
+          $dsX509Data->appendChild($unsigned->createElement('ds:X509Certificate', CertificateStore::getCert($pemCertificate)));
+        }
+      } else {
+        $dsX509Data->appendChild($unsigned->createElement('ds:X509Certificate', CertificateStore::getCert($certificateStore->getPemCertificate())));
       }
       $dsKeyValue = $dsKeyInfo->appendChild($unsigned->createElement('ds:KeyValue'));
       $RSAKeyValue = $dsKeyValue->appendChild($unsigned->createElement('ds:RSAKeyValue'));
