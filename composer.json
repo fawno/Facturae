@@ -22,7 +22,7 @@
     "robrichards/xmlseclibs": "^3.1",
     "robrichards/wse-php": "^2.0",
     "globalcitizen/php-iban": "^4.2",
-    "fawno/face-relations": "^0.0.4"
+    "fawno/face-relations": "^0.1"
   },
   "autoload": {
     "psr-4": {
