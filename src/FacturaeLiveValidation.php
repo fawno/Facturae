@@ -50,6 +50,34 @@
       return $this->errors;
     }
 
+    public function hasInvalidAdhesion () : bool {
+      foreach ($this->errors as $error) {
+        if (preg_match('~^INVALID_ADHESION\-\d+$~i', $error->getType())) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public function isInvalidAdhesion () : bool {
+      $invalid_adhesion = false;
+      $invalid_other = false;
+
+      foreach ($this->errors as $error) {
+        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)\-\d+$~i', $error->getType())) {
+          continue;
+        }
+
+        if (preg_match('~^INVALID_ADHESION\-\d+$~i', $error->getType())) {
+          $invalid_adhesion = true;
+          continue;
+        }
+
+        $invalid_other = true;
+      }
+      return ($invalid_adhesion and !$invalid_other);
+    }
+
     public static function create (string $result) : FacturaeLiveValidation {
       return new self($result);
     }

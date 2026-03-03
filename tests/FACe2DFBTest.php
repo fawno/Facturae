@@ -12,12 +12,10 @@
     public const FCLASS = FACe2::class;
 
     /**
-     * Debido a cambios de estructura en Diputación, no existe relación
-     * oficina contable-órgano gestor-unidad tramitadora en las tablas
-     * de órganos administrativos.
-     * Contacte con su enlace o consulte los nuevos códigos en la página web.
+     * Error al crear la factura electrónica en BKON:
+     * Problemas con el envio de ficheros al Registro Electrónico
      */
-    public const CODIGO1 = 'RCF08004';
+    public const CODIGO1 = 'DFB07006';
 
     public function testEnviarFacturaRepetida () : void {
       $this->assertTrue(true);

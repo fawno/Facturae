@@ -13,6 +13,7 @@
   namespace Fawno\Facturae\Error;
 
   use ArrayObject;
+  use Fawno\Facturae\Error\LiveValidationError;
 
   class LiveValidationErrors extends ArrayObject {
 		public static function parseErrors (array $errors) : LiveValidationErrors {
