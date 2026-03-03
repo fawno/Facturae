@@ -14,11 +14,12 @@
 
   use Fawno\Facturae\Error\LiveValidationErrors;
   use Fawno\Facturae\Exception\LiveValidationException;
+  use Fawno\Facturae\Facturae;
   use Fawno\Facturae\LiveValidation\LiveValidationInvoice;
   use Fawno\Facturae\Signer\DOMDocumentExtended;
 
   class FacturaeLiveValidation {
-    public const VALIDATOR = 'https://se-proveedores-face.redsara.es/api/v1/invoice-validation';
+    public const VALIDATOR = 'https://proveedores.face.gob.es/api/v1/invoice-validation';
 
     protected string $type;
     protected bool $valid;
