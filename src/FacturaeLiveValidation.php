@@ -56,6 +56,17 @@
           return true;
         }
       }
+
+      return false;
+    }
+
+    public function hasInvalidRelation () : bool {
+      foreach ($this->errors as $error) {
+        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)\-\d+$~i', $error->getType())) {
+          return true;
+        }
+      }
+
       return false;
     }
 
