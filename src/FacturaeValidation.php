@@ -19,6 +19,9 @@
   use Fawno\Facturae\Error\DIR3\MissingDIR3Error;
   use Fawno\Facturae\Error\IBAN\InvalidIBANError;
   use Fawno\Facturae\Error\IBAN\MissingIBANError;
+  use Fawno\Facturae\Facturae;
+  use Fawno\Facturae\FacturaeSchema;
+  use Fawno\Facturae\FacturaeSignature;
 
   class FacturaeValidation {
     protected array $errors = [];
