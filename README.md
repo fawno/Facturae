@@ -1,3 +1,4 @@
+[![GitHub Workflow](https://github.com/fawno/Facturae/actions/workflows/php.yml/badge.svg)](https://github.com/fawno/Facturae/actions/workflows/php.yml)
 [![GitHub license](https://img.shields.io/github/license/fawno/Facturae.svg)](https://github.com/fawno/Facturae/blob/master/LICENSE)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/fawno/Facturae.svg)](https://github.com/fawno/Facturae/tags)
 [![GitHub release](https://img.shields.io/github/release/fawno/Facturae.svg)](https://github.com/fawno/Facturae/releases)
