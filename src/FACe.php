@@ -63,7 +63,7 @@
     }
 
     #[\ReturnTypeWillChange]
-    public function __doRequest ($request, $location, $action, $version, $oneWay = false) {
+    public function __doRequest (string $request, string $location, string $action, int $version, bool $oneWay = false, ?string $uriParserClass = null) : ?string {
       $request_signed = $this->signRequest($request);
 
       return parent::__doRequest($request_signed, $location, $action, $version, $oneWay);
