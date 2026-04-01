@@ -13,16 +13,16 @@
   namespace Fawno\Facturae\Error;
 
   use Error;
+  use Fawno\Facturae\Error\LiveValidation\LiveValidationErrorType;
   use Throwable;
 
   class LiveValidationError extends Error {
-    protected ?string $type = null;
+    protected LiveValidationErrorType $type;
 
-    protected function __construct (string $message = '', string|int $code = 0, ?Throwable $previous = null) {
-      $this->type = is_string($code) ? $code : null;
+    protected function __construct (string $message = '', string $code, ?Throwable $previous = null) {
+      $this->type = LiveValidationErrorType::fromErrorCode($code);
 
       if (preg_match('~^(.*)-(\d+)$~', (string) $code, $type)) {
-        $this->type = $type[1];
         $code = (int) $type[2];
       }
 
@@ -35,7 +35,19 @@
       return new static($message, $code, $previous);
     }
 
-    public function getType () : ?string {
+    public function getType () : LiveValidationErrorType {
       return $this->type;
+    }
+
+    public function hasRegisterNumber () : bool {
+      return ($this->type->isInvalidInvoice() and 123 === $this->code);
+    }
+
+    public function isInvalidRelation () : bool {
+      return $this->type->isInvalidRelation();
+    }
+
+    public function isInvalidAdhesion () : bool {
+      return $this->type->isInvalidAdhesion();
     }
   }

@@ -53,7 +53,9 @@
 
     public function hasInvalidAdhesion () : bool {
       foreach ($this->errors as $error) {
-        if (preg_match('~^INVALID_ADHESION(\-\d+)?$~i', $error->getType())) {
+        /** @var LiveValidationError $error */
+
+        if ($error->isInvalidAdhesion()) {
           return true;
         }
       }
@@ -63,7 +65,9 @@
 
     public function hasInvalidRelation () : bool {
       foreach ($this->errors as $error) {
-        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)(\-\d+)?$~i', $error->getType())) {
+        /** @var LiveValidationError $error */
+
+        if ($error->isInvalidRelation()) {
           return true;
         }
       }
@@ -71,14 +75,15 @@
       return false;
     }
 
-    public function isUploaded () : bool {
+    public function isRegistered () : bool {
       if ($this->errors->count() > 1) {
         return false;
       }
 
       foreach ($this->errors as $error) {
         /** @var LiveValidationError $error */
-        if (123 == $error->getCode()) {
+
+        if ($error->hasRegisterNumber()) {
           return true;
         }
       }
@@ -89,7 +94,8 @@
     public function getRegisterNumber () : false|string {
       foreach ($this->errors as $error) {
         /** @var LiveValidationError $error */
-        if (123 == $error->getCode()) {
+
+        if ($error->hasRegisterNumber()) {
           return $error->getMessage();
         }
       }
@@ -102,11 +108,13 @@
       $invalid_other = false;
 
       foreach ($this->errors as $error) {
-        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)(\-\d+)?$~i', $error->getType())) {
+        /** @var LiveValidationError $error */
+
+        if ($error->isInvalidRelation()) {
           continue;
         }
 
-        if (preg_match('~^INVALID_ADHESION(\-\d+)?$~i', $error->getType())) {
+        if ($error->isInvalidAdhesion()) {
           $invalid_adhesion = true;
           continue;
         }
