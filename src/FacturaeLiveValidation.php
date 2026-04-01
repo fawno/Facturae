@@ -12,6 +12,7 @@
 
   namespace Fawno\Facturae;
 
+  use Fawno\Facturae\Error\LiveValidationError;
   use Fawno\Facturae\Error\LiveValidationErrors;
   use Fawno\Facturae\Exception\LiveValidationException;
   use Fawno\Facturae\Facturae;
@@ -52,7 +53,7 @@
 
     public function hasInvalidAdhesion () : bool {
       foreach ($this->errors as $error) {
-        if (preg_match('~^INVALID_ADHESION\-\d+$~i', $error->getType())) {
+        if (preg_match('~^INVALID_ADHESION(\-\d+)?$~i', $error->getType())) {
           return true;
         }
       }
@@ -62,8 +63,34 @@
 
     public function hasInvalidRelation () : bool {
       foreach ($this->errors as $error) {
-        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)\-\d+$~i', $error->getType())) {
+        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)(\-\d+)?$~i', $error->getType())) {
           return true;
+        }
+      }
+
+      return false;
+    }
+
+    public function isUploaded () : bool {
+      if ($this->errors->count() > 1) {
+        return false;
+      }
+
+      foreach ($this->errors as $error) {
+        /** @var LiveValidationError $error */
+        if (123 == $error->getCode()) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    public function getRegisterNumber () : false|string {
+      foreach ($this->errors as $error) {
+        /** @var LiveValidationError $error */
+        if (123 == $error->getCode()) {
+          return $error->getMessage();
         }
       }
 
@@ -75,11 +102,11 @@
       $invalid_other = false;
 
       foreach ($this->errors as $error) {
-        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)\-\d+$~i', $error->getType())) {
+        if (preg_match('~^(INVALID_ADMINISTRATIVE_CENTRE|INVALID-RELATION)(\-\d+)?$~i', $error->getType())) {
           continue;
         }
 
-        if (preg_match('~^INVALID_ADHESION\-\d+$~i', $error->getType())) {
+        if (preg_match('~^INVALID_ADHESION(\-\d+)?$~i', $error->getType())) {
           $invalid_adhesion = true;
           continue;
         }

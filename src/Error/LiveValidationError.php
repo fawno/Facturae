@@ -18,11 +18,21 @@
   class LiveValidationError extends Error {
     protected ?string $type = null;
 
-    public function __construct (string $message = '', string|int $code = 0, ?Throwable $previous = null) {
+    protected function __construct (string $message = '', string|int $code = 0, ?Throwable $previous = null) {
       $this->type = is_string($code) ? $code : null;
+
+      if (preg_match('~^(.*)-(\d+)$~', (string) $code, $type)) {
+        $this->type = $type[1];
+        $code = (int) $type[2];
+      }
+
       $code = is_string($code) ? 0 : $code;
 
       parent::__construct($message, $code, $previous);
+    }
+
+    public static function create (string $message = '', string|int $code = 0, ?Throwable $previous = null) : LiveValidationError {
+      return new static($message, $code, $previous);
     }
 
     public function getType () : ?string {

@@ -20,7 +20,7 @@
 			$_entities = [];
 
       foreach (array_merge(...$errors) as $code => $message) {
-        $_entities[] = new LiveValidationError($message, $code);
+        $_entities[] = LiveValidationError::create($message, $code);
       }
 
 			return new self($_entities);
