@@ -19,7 +19,7 @@
   class LiveValidationError extends Error {
     protected LiveValidationErrorType $type;
 
-    protected function __construct (string $message = '', string $code, ?Throwable $previous = null) {
+    protected function __construct (string $message = '', string $code = '', ?Throwable $previous = null) {
       $this->type = LiveValidationErrorType::fromErrorCode($code);
 
       if (preg_match('~^(.*)-(\d+)$~', (string) $code, $type)) {
