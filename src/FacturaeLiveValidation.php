@@ -12,6 +12,7 @@
 
   namespace Fawno\Facturae;
 
+  use DateTime;
   use Fawno\Facturae\Error\LiveValidationError;
   use Fawno\Facturae\Error\LiveValidationErrors;
   use Fawno\Facturae\Exception\LiveValidationException;
@@ -101,6 +102,14 @@
       }
 
       return false;
+    }
+
+    public function getRegistryCode () : false|string {
+      return $this->invoice->registryCode ?? false;
+    }
+
+    public function getRegistryDate () : false|DateTime {
+      return $this->invoice->registryDate ?? false;
     }
 
     public function isInvalidAdhesion () : bool {
