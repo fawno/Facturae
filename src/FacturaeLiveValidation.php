@@ -108,8 +108,8 @@
       return $this->invoice->registryCode ?? false;
     }
 
-    public function getRegistryDate () : false|DateTime {
-      return $this->invoice->registryDate ?? false;
+    public function getRegistryDate () : ?DateTime {
+      return $this->invoice->registryDate ?? null;
     }
 
     public function isInvalidAdhesion () : bool {
