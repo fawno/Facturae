@@ -68,7 +68,7 @@
       $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $signed, []);
       $response = $wsdlFACe->enviarFactura($invoiceWS);
 
-      $this->assertEquals(static::CODIGO1, $response->resultado->codigo, print_r($response, true));
+      $this->assertEquals(static::CODIGO1, $response->resultado->codigo, var_export($response, true));
     }
 
     /**
@@ -98,6 +98,6 @@
       $invoiceWS = $wsdlFACe::SSPPFactura('example@example.com', $signed, []);
       $response = $wsdlFACe->enviarFactura($invoiceWS);
 
-      $this->assertEquals(static::CODIGO2, $response->resultado->codigo, print_r($response, true));
+      $this->assertEquals(static::CODIGO1, $response->resultado->codigo, var_export($response, true));
     }
   }
