@@ -34,4 +34,6 @@
     public LiveValidationFacturae $facturae;
     public array $attachments;
     public LiveValidationParty $signer;
+    public string $registryCode;
+    public DateTime $registryDate;
   }
