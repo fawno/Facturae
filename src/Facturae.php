@@ -15,7 +15,8 @@
   use DateTimeImmutable;
   use DOMNode;
   use Exception;
-  use Fawno\Facturae\Signer\DOMDocumentExtended;
+use Fawno\Facturae\Model\PaymentMeansType;
+use Fawno\Facturae\Signer\DOMDocumentExtended;
   use SimpleXMLElement;
   use XSLTProcessor;
 
@@ -185,11 +186,12 @@
 
       return $invoice_iban ?: null;
     }
+    public function getPaymentMeansCode () : string {
+      return (string) ($this->Invoices->Invoice->PaymentDetails?->Installment?->PaymentMeans ?? '');
+    }
 
-    public function getPaymentMeans () : ?string {
-      $means = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->PaymentMeans ?? '';
-
-      return $means ?: null;
+    public function getPaymentMeans () : ?PaymentMeansType {
+      return PaymentMeansType::tryFrom($this->getPaymentMeansCode());;
     }
 
     public function getAdministrativeCentres () : array {

@@ -17,9 +17,10 @@
   use Fawno\Facturae\Error\BuyerTIN\InvalidBuyerTINError;
   use Fawno\Facturae\Error\BuyerTIN\MissingBuyerTINError;
   use Fawno\Facturae\Error\DIR3\MissingDIR3Error;
-use Fawno\Facturae\Error\FacturaeError;
-use Fawno\Facturae\Error\IBAN\InvalidIBANError;
+  use Fawno\Facturae\Error\IBAN\InvalidIBANError;
   use Fawno\Facturae\Error\IBAN\MissingIBANError;
+  use Fawno\Facturae\Error\InvalidPaymentMeansError;
+  use Fawno\Facturae\Error\MissingPaymentMeansError;
   use Fawno\Facturae\Facturae;
   use Fawno\Facturae\FacturaeSchema;
   use Fawno\Facturae\FacturaeSignature;
@@ -54,19 +55,26 @@ use Fawno\Facturae\Error\IBAN\InvalidIBANError;
         $this->errors[] = $buyer_tin ? (new InvalidBuyerTINError()) : (new MissingBuyerTINError());
       }
 
-      if (null === $paymentMeans = $facturae->getPaymentMeans()) {
-        $this->errors[] = new FacturaeError();
-      } elseif ('02' === $paymentMeans or '03' === $paymentMeans) {
-        $iban = $facturae->getAccountToBeDebited();
-        if (is_null($iban) or !verify_iban($iban)) {
-          $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
-        }
-      } elseif ('04' === $paymentMeans) {
-        $iban = $facturae->getAccountToBeCredited();
-        if (is_null($iban) or !verify_iban($iban)) {
-          $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
+      if ('' === $codeValue = $facturae->getPaymentMeansCode()) {
+        $this->errors[] = new MissingPaymentMeansError();
+      } elseif (null === $paymentMeans = $facturae->getPaymentMeans()) {
+        $this->errors[] = new InvalidPaymentMeansError($codeValue);
+      } else {
+        $iban = match (true) {
+          $paymentMeans->requiresAccountToBeCredited() => $facturae->getAccountToBeCredited(),
+          $paymentMeans->requiresAccountToBeDebited()  => $facturae->getAccountToBeDebited(),
+          default => false,
+        };
+
+        if ($iban !== false) {
+          if (null === $iban) {
+            $this->errors[] = new MissingIBANError();
+          } elseif (!verify_iban($iban)) {
+            $this->errors[] = new InvalidIBANError($iban);
+          }
         }
       }
+
 
 			$dir3 = $facturae->getDIR3();
 			if (count($dir3) < 3) {
