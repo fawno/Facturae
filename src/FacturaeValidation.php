@@ -56,7 +56,7 @@ use Fawno\Facturae\Error\IBAN\InvalidIBANError;
 
       if (null === $paymentMeans = $facturae->getPaymentMeans()) {
         $this->errors[] = new FacturaeError();
-      } elseif ('03' === $paymentMeans) {
+      } elseif ('02' === $paymentMeans or '03' === $paymentMeans) {
         $iban = $facturae->getAccountToBeDebited();
         if (is_null($iban) or !verify_iban($iban)) {
           $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
