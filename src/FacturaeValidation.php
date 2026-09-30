@@ -17,7 +17,8 @@
   use Fawno\Facturae\Error\BuyerTIN\InvalidBuyerTINError;
   use Fawno\Facturae\Error\BuyerTIN\MissingBuyerTINError;
   use Fawno\Facturae\Error\DIR3\MissingDIR3Error;
-  use Fawno\Facturae\Error\IBAN\InvalidIBANError;
+use Fawno\Facturae\Error\FacturaeError;
+use Fawno\Facturae\Error\IBAN\InvalidIBANError;
   use Fawno\Facturae\Error\IBAN\MissingIBANError;
   use Fawno\Facturae\Facturae;
   use Fawno\Facturae\FacturaeSchema;
@@ -53,9 +54,18 @@
         $this->errors[] = $buyer_tin ? (new InvalidBuyerTINError()) : (new MissingBuyerTINError());
       }
 
-      $iban = $facturae->getIBAN();
-      if (is_null($iban) or !verify_iban($iban)) {
-        $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
+      if (null === $paymentMeans = $facturae->getPaymentMeans()) {
+        $this->errors[] = new FacturaeError();
+      } elseif ('03' === $paymentMeans) {
+        $iban = $facturae->getAccountToBeDebited();
+        if (is_null($iban) or !verify_iban($iban)) {
+          $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
+        }
+      } elseif ('04' === $paymentMeans) {
+        $iban = $facturae->getAccountToBeCredited();
+        if (is_null($iban) or !verify_iban($iban)) {
+          $this->errors[] = $iban ? (new InvalidIBANError()) : (new MissingIBANError());
+        }
       }
 
 			$dir3 = $facturae->getDIR3();

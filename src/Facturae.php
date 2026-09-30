@@ -174,6 +174,24 @@
       return (!empty($invoice_iban) ? $invoice_iban : null);
     }
 
+    public function getAccountToBeCredited () : ?string {
+			$invoice_iban = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->AccountToBeCredited?->IBAN ?? '';
+
+      return $invoice_iban ?: null;
+    }
+
+    public function getAccountToBeDebited () : ?string {
+			$invoice_iban = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->AccountToBeDebited?->IBAN ?? '';
+
+      return $invoice_iban ?: null;
+    }
+
+    public function getPaymentMeans () : ?string {
+      $means = (string) $this->Invoices->Invoice->PaymentDetails?->Installment?->PaymentMeans ?? '';
+
+      return $means ?: null;
+    }
+
     public function getAdministrativeCentres () : array {
       $centres = [];
 
